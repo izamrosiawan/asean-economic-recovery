@@ -1,0 +1,278 @@
+[
+  {
+    "country": "ASEAN",
+    "history": {
+      "2019": 147796972,
+      "2020": 27184224,
+      "2021": 3060897,
+      "2022": 44206300,
+      "2023": 104132183,
+      "2024": 140576987,
+      "2025": 147044420
+    },
+    "metrics": {
+      "drop_severity_pct": -97.93,
+      "drop_retained_pct": 2.07,
+      "recovery_rate_2025_pct": 99.49,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 101.56
+    },
+    "forecast": {
+      "2026": 203105477,
+      "2027": 241539250
+    }
+  },
+  {
+    "country": "Brunei Darussalam",
+    "history": {
+      "2019": 4449028,
+      "2020": 1070614,
+      "2021": 110391,
+      "2022": 664259,
+      "2023": 2267960,
+      "2024": 678037,
+      "2025": 741050
+    },
+    "metrics": {
+      "drop_severity_pct": -97.52,
+      "drop_retained_pct": 2.48,
+      "recovery_rate_2025_pct": 16.66,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 19.14
+    },
+    "forecast": {
+      "2026": 1274868,
+      "2027": 1402377
+    }
+  },
+  {
+    "country": "Cambodia",
+    "history": {
+      "2019": 6610592,
+      "2020": 1306143,
+      "2021": 196495,
+      "2022": 2276626,
+      "2023": 5453231,
+      "2024": 6700125,
+      "2025": 5569752
+    },
+    "metrics": {
+      "drop_severity_pct": -97.03,
+      "drop_retained_pct": 2.97,
+      "recovery_rate_2025_pct": 84.25,
+      "years_to_recover": "2024",
+      "resilience_score": 87.23
+    },
+    "forecast": {
+      "2026": 8590249,
+      "2027": 10107251
+    }
+  },
+  {
+    "country": "Indonesia",
+    "history": {
+      "2019": 16106954,
+      "2020": 4052923,
+      "2021": 1557530,
+      "2022": 5889031,
+      "2023": 11677825,
+      "2024": 14347813,
+      "2025": 15386646
+    },
+    "metrics": {
+      "drop_severity_pct": -90.33,
+      "drop_retained_pct": 9.67,
+      "recovery_rate_2025_pct": 95.53,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 105.2
+    },
+    "forecast": {
+      "2026": 20606873,
+      "2027": 24218574
+    }
+  },
+  {
+    "country": "Lao PDR",
+    "history": {
+      "2019": 4791065,
+      "2020": 886447,
+      "2021": null,
+      "2022": 1294365,
+      "2023": 3417629,
+      "2024": 4120832,
+      "2025": 4580709
+    },
+    "metrics": {
+      "drop_severity_pct": -81.5,
+      "drop_retained_pct": 18.5,
+      "recovery_rate_2025_pct": 95.61,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 114.11
+    },
+    "forecast": {
+      "2026": 5993942,
+      "2027": 7050166
+    }
+  },
+  {
+    "country": "Malaysia",
+    "history": {
+      "2019": 26100784,
+      "2020": 4332722,
+      "2021": 134728,
+      "2022": 10070964,
+      "2023": 20141846,
+      "2024": 37961485,
+      "2025": 42196892
+    },
+    "metrics": {
+      "drop_severity_pct": -99.48,
+      "drop_retained_pct": 0.52,
+      "recovery_rate_2025_pct": 161.67,
+      "years_to_recover": "2024",
+      "resilience_score": 162.19
+    },
+    "forecast": {
+      "2026": 55705637,
+      "2027": 66907122
+    }
+  },
+  {
+    "country": "Myanmar",
+    "history": {
+      "2019": 4364101,
+      "2020": 903343,
+      "2021": 130947,
+      "2022": 233487,
+      "2023": 1284731,
+      "2024": 1063072,
+      "2025": 973263
+    },
+    "metrics": {
+      "drop_severity_pct": -97.0,
+      "drop_retained_pct": 3.0,
+      "recovery_rate_2025_pct": 22.3,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 25.3
+    },
+    "forecast": {
+      "2026": 1491365,
+      "2027": 1742786
+    }
+  },
+  {
+    "country": "Philippines",
+    "history": {
+      "2019": 8260913,
+      "2020": 1482535,
+      "2021": 163879,
+      "2022": 2653858,
+      "2023": 5450557,
+      "2024": 5949350,
+      "2025": 6484060
+    },
+    "metrics": {
+      "drop_severity_pct": -98.02,
+      "drop_retained_pct": 1.98,
+      "recovery_rate_2025_pct": 78.49,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 80.47
+    },
+    "forecast": {
+      "2026": 8921097,
+      "2027": 10514682
+    }
+  },
+  {
+    "country": "Singapore",
+    "history": {
+      "2019": 19113842,
+      "2020": 2742443,
+      "2021": 330059,
+      "2022": 6305744,
+      "2023": 13610404,
+      "2024": 16529942,
+      "2025": 16910000
+    },
+    "metrics": {
+      "drop_severity_pct": -98.27,
+      "drop_retained_pct": 1.73,
+      "recovery_rate_2025_pct": 88.47,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 90.2
+    },
+    "forecast": {
+      "2026": 23752453,
+      "2027": 28090861
+    }
+  },
+  {
+    "country": "Thailand",
+    "history": {
+      "2019": 39916251,
+      "2020": 6702396,
+      "2021": 427869,
+      "2022": 11153026,
+      "2023": 28150016,
+      "2024": 35545713,
+      "2025": 32974321
+    },
+    "metrics": {
+      "drop_severity_pct": -98.93,
+      "drop_retained_pct": 1.07,
+      "recovery_rate_2025_pct": 82.61,
+      "years_to_recover": "Not fully recovered",
+      "resilience_score": 83.68
+    },
+    "forecast": {
+      "2026": 48495866,
+      "2027": 57444425
+    }
+  },
+  {
+    "country": "Timor-Leste",
+    "history": {
+      "2019": 74851,
+      "2020": 17879,
+      "2021": 5499,
+      "2022": 3718,
+      "2023": 75550,
+      "2024": 96718,
+      "2025": 59436
+    },
+    "metrics": {
+      "drop_severity_pct": -92.65,
+      "drop_retained_pct": 7.35,
+      "recovery_rate_2025_pct": 79.41,
+      "years_to_recover": "2023",
+      "resilience_score": 86.75
+    },
+    "forecast": {
+      "2026": 108446,
+      "2027": 128533
+    }
+  },
+  {
+    "country": "Viet Nam",
+    "history": {
+      "2019": 18008591,
+      "2020": 3686779,
+      "2021": 3500,
+      "2022": 3661222,
+      "2023": 12602434,
+      "2024": 17583900,
+      "2025": 21168291
+    },
+    "metrics": {
+      "drop_severity_pct": -99.98,
+      "drop_retained_pct": 0.02,
+      "recovery_rate_2025_pct": 117.55,
+      "years_to_recover": "2025",
+      "resilience_score": 117.56
+    },
+    "forecast": {
+      "2026": 27879547,
+      "2027": 33504773
+    }
+  }
+]
