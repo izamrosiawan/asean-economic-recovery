@@ -19,11 +19,22 @@ Struktur repositori ini terbagi menjadi dua bagian:
 Ketahanan pariwisata di setiap negara diukur secara kuantitatif menggunakan tiga metrik utama:
 
 1. **Drop Severity (%):** Mengukur kedalaman penurunan kunjungan pada titik terendah krisis (tahun 2020 atau 2021) dibandingkan dengan kondisi sebelum pandemi (2019).
-   $$\text{Drop Severity} = \frac{\min(\text{Arrivals}_{2020}, \text{Arrivals}_{2021}) - \text{Arrivals}_{2019}}{\text{Arrivals}_{2019}} \times 100\%$$
 2. **Recovery Rate 2025 (%):** Mengukur persentase pemulihan volume kunjungan pada tahun 2025 terhadap kondisi normal di tahun 2019.
-   $$\text{Recovery Rate} = \frac{\text{Arrivals}_{2025}}{\text{Arrivals}_{2019}} \times 100\%$$
 3. **Resilience Score:** Skor indeks komposit yang mencerminkan kemampuan bertahan pasar (sisa kunjungan yang terselamatkan) dikombinasikan dengan kecepatan pemulihan.
-   $$\text{Resilience Score} = \text{Recovery Rate} + (100\% + \text{Drop Severity})$$
+
+Ketiga metrik tersebut dihitung dengan rumus sebagai berikut:
+
+$$
+\text{Drop Severity} = \frac{\min(\text{Arrivals}_{2020}, \text{Arrivals}_{2021}) - \text{Arrivals}_{2019}}{\text{Arrivals}_{2019}} \times 100\%
+$$
+
+$$
+\text{Recovery Rate} = \frac{\text{Arrivals}_{2025}}{\text{Arrivals}_{2019}} \times 100\%
+$$
+
+$$
+\text{Resilience Score} = \text{Recovery Rate} + (100\% + \text{Drop Severity})
+$$
 
 ---
 
