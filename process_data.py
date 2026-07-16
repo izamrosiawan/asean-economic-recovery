@@ -101,7 +101,20 @@ for idx, row in df.iterrows():
         # Predict for 2026 and 2027
         val_2026 = slope * 2026 + intercept
         val_2027 = slope * 2027 + intercept
-        # Clamping to avoid negative values
+        
+        # Apply damping and capping based on 2019 capacity ceiling
+        if val_2019:
+            cap_limit = val_2019 * 1.15
+            
+            # Damp growth exceeding 2019 levels
+            if val_2026 > val_2019:
+                val_2026 = val_2019 + (val_2026 - val_2019) * 0.3
+            if val_2027 > val_2019:
+                val_2027 = val_2019 + (val_2027 - val_2019) * 0.3
+                
+            val_2026 = min(cap_limit, val_2026)
+            val_2027 = min(cap_limit, val_2027)
+            
         forecast['2026'] = max(0, int(val_2026))
         forecast['2027'] = max(0, int(val_2027))
     else:

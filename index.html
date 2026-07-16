@@ -32,16 +32,20 @@
             
             <nav class="sidebar-menu">
                 <button class="sidebar-btn nav-btn active" id="btn-overview" onclick="switchTab('overview')">
-                    <span class="btn-indicator"></span>Overview
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Overview
                 </button>
                 <button class="sidebar-btn nav-btn" id="btn-resilience" onclick="switchTab('resilience')">
-                    <span class="btn-indicator"></span>Resilience
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    Resilience
                 </button>
                 <button class="sidebar-btn nav-btn" id="btn-forecasting" onclick="switchTab('forecasting')">
-                    <span class="btn-indicator"></span>Forecast 2027
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    Forecast 2027
                 </button>
                 <button class="sidebar-btn nav-btn" id="btn-explorer" onclick="switchTab('explorer')">
-                    <span class="btn-indicator"></span>Data Explorer
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
+                    Data Explorer
                 </button>
             </nav>
             
@@ -76,6 +80,20 @@
                         </div>
                         <div class="header-aside">
                             <div class="refresh-time" id="refresh-time">LATEST REFRESH: 16-JUL-2026</div>
+                            
+                            <!-- Year Selector Dropdown -->
+                            <div class="selector-wrapper">
+                                <select id="year-selector" onchange="handleYearChange()">
+                                    <option value="2019">Tahun: 2019</option>
+                                    <option value="2020">Tahun: 2020</option>
+                                    <option value="2021">Tahun: 2021</option>
+                                    <option value="2022">Tahun: 2022</option>
+                                    <option value="2023">Tahun: 2023</option>
+                                    <option value="2024">Tahun: 2024</option>
+                                    <option value="2025" selected>Tahun: 2025</option>
+                                </select>
+                            </div>
+
                             <div class="selector-wrapper">
                                 <select id="country-selector" onchange="handleCountryChange()">
                                     <!-- Options filled dynamically -->
@@ -90,7 +108,7 @@
                 <!-- Card 1: Arrivals -->
                 <div class="metric-card gold">
                     <div class="card-top">
-                        <span class="card-title">Kunjungan Wisatawan (2025)</span>
+                        <span class="card-title" id="lbl-arrivals">Kunjungan Wisatawan (2025)</span>
                         <div class="card-icon">
                             <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="currentColor"/></svg>
                         </div>
@@ -126,7 +144,7 @@
                 <!-- Card 3: Recovery Rate -->
                 <div class="metric-card success">
                     <div class="card-top">
-                        <span class="card-title">Tingkat Pemulihan (2025)</span>
+                        <span class="card-title" id="lbl-recovery">Tingkat Pemulihan (2025)</span>
                         <div class="card-icon">
                             <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>
                         </div>
@@ -162,6 +180,38 @@
 
             <!-- Tab 1: Overview & Timeline -->
             <section class="tab-content active" id="tab-overview">
+                <!-- Comparison Mode Card -->
+                <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                        <label class="toggle-wrapper" style="font-weight: 700; font-size: 15px;">
+                            <input type="checkbox" id="compare-toggle" onchange="toggleComparisonMode()" style="margin-right: 4px;">
+                            Mode Perbandingan (Multi-Negara)
+                        </label>
+                        <p class="subtitle" style="margin-bottom: 0; font-size: 12.5px;">Bandingkan tren grafik beberapa negara secara langsung dalam satu tampilan visual.</p>
+                    </div>
+                    <div class="comparison-container" id="comparison-panel">
+                        <div class="comparison-header">Pilih Negara Pembanding:</div>
+                        <div class="comparison-grid" id="comparison-checklist">
+                            <!-- Filled dynamically in app.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Peta Interaktif ASEAN -->
+                <div class="glass-card" style="padding: 24px; margin-bottom: 20px;">
+                    <h2>Peta Interaktif Resiliensi Sektor Pariwisata ASEAN</h2>
+                    <p class="subtitle" style="margin-bottom: 16px;">Arahkan kursor untuk melihat status pemulihan pariwisata regional, dan klik untuk memilih negara tersebut.</p>
+                    
+                    <div id="map-container" class="map-card-wrapper" style="position: relative;">
+                        <!-- Custom Tooltip -->
+                        <div id="map-tooltip" class="map-tooltip">
+                            <div class="map-tooltip-title" id="map-tooltip-title">Negara</div>
+                            <div class="map-tooltip-desc" id="map-tooltip-desc">Detail data...</div>
+                        </div>
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </div>
+
                 <div class="chart-container-large glass-card">
                     <div class="chart-header">
                         <div>
@@ -172,6 +222,47 @@
                     </div>
                     <div class="canvas-wrapper">
                         <canvas id="overviewChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Simulation & Insights Row (Grid-Two-Columns) -->
+                <div class="grid-two-columns" style="margin-bottom: var(--space-margin);">
+                    <!-- Economic Impact Simulator Card -->
+                    <div class="glass-card" style="margin-bottom: 0;">
+                        <h2>Simulasi Dampak & Kerugian Ekonomi</h2>
+                        <p class="subtitle">Sesuaikan pengeluaran rata-rata per turis untuk melihat estimasi total pendapatan pariwisata regional serta kerugian akibat pandemi.</p>
+                        
+                        <div style="margin-top: 0; background: transparent; border: none; padding: 0;">
+                            <div class="slider-group">
+                                <div class="slider-label-wrapper">
+                                    <span>Rata-Rata Belanja Per Wisatawan (USD)</span>
+                                    <span class="slider-value" id="spending-value">$1,000</span>
+                                </div>
+                                <input type="range" id="spending-slider" class="premium-range" min="100" max="5000" step="50" value="1000" oninput="handleSpendingChange(this.value)">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
+                            <div style="background: var(--color-secondary); padding: 16px; border-radius: var(--rounded-md); border: 1px solid var(--color-border-glass);">
+                                <div class="card-title" style="font-size: 11px; margin-bottom: 4px; text-transform: uppercase;">Pendapatan Estimasi (<span class="spending-year-lbl">2025</span>)</div>
+                                <div class="card-value" id="sim-revenue" style="font-size: 20px; color: var(--color-accent); font-weight: 700;">$0</div>
+                            </div>
+                            <div style="background: var(--color-error-bg); padding: 16px; border-radius: var(--rounded-md); border: 1px solid var(--color-border-glass);">
+                                <div class="card-title" style="font-size: 11px; margin-bottom: 4px; text-transform: uppercase; color: var(--color-error);">Kerugian Akumulatif (2020-2022)</div>
+                                <div class="card-value" id="sim-loss" style="font-size: 20px; color: var(--color-error); font-weight: 700;">$0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Smart Insights Card -->
+                    <div class="glass-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <h2>Analisis & Wawasan Resiliensi Sektoral</h2>
+                            <p class="subtitle">Wawasan otomatis yang mendeteksi pola ketahanan destinasi pariwisata secara real-time.</p>
+                            <div class="insight-card" id="insight-container" style="margin-top: 0;">
+                                <!-- Dynamically loaded from JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -276,6 +367,27 @@
                     </div>
                 </div>
 
+                <!-- Proyeksi What-If Simulator Panel -->
+                <div class="glass-card" style="margin-bottom: 24px;">
+                    <h2>Simulator Pertumbuhan Pariwisata "What-If" (2026-2027)</h2>
+                    <p class="subtitle">Geser slider untuk menyesuaikan laju proyeksi pertumbuhan model regresi linier untuk menyimulasikan skenario optimis (+%), moderat (0%), atau pesimis (-%).</p>
+                    
+                    <div style="margin-top: 0; background: transparent; border: none; padding: 0;">
+                        <div class="slider-group">
+                            <div class="slider-label-wrapper">
+                                <span>Faktor Penyesuaian Pertumbuhan Proyeksi</span>
+                                <span class="slider-value" id="whatif-value">Moderat (0%)</span>
+                            </div>
+                            <input type="range" id="whatif-slider" class="premium-range" min="-30" max="30" step="1" value="0" oninput="handleWhatIfChange(this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--color-muted); margin-top: 4px;">
+                                <span>Sangat Pesimis (-30%)</span>
+                                <span>Moderat (Baseline OLS)</span>
+                                <span>Sangat Optimis (+30%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid-two-columns margin-top">
                     <div class="glass-card info-card">
                         <h2>Metodologi Pemodelan Proyeksi</h2>
@@ -296,7 +408,7 @@
                                         <th>2025 (Aktual)</th>
                                         <th>2026 (Proyeksi)</th>
                                         <th>2027 (Proyeksi)</th>
-                                        <th>Estimasi Pertumbuhan</th>
+                                        <th>CAGR (2025-2027)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -311,16 +423,25 @@
             <!-- Tab 4: Data Explorer -->
             <section class="tab-content" id="tab-explorer">
                 <div class="glass-card">
-                    <div class="explorer-header">
+                    <div class="explorer-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
                         <div>
                             <h2>Eksplorasi Dataset Konsolidasi</h2>
-                            <p class="subtitle">Daftar lengkap data historis pariwisata regional, metrik perhitungan, dan proyeksi model dalam satu antarmuka terintegrasi.</p>
+                            <p class="subtitle" style="margin-bottom: 0;">Daftar lengkap data historis pariwisata regional, metrik perhitungan, dan proyeksi model dalam satu antarmuka terintegrasi.</p>
                         </div>
-                        <button class="action-btn" onclick="exportCSV()">
-                            <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px; vertical-align: middle;"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z" fill="currentColor"/>
-                            </svg>
-                            Ekspor (.CSV)
-                        </button>
+                        
+                        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                            <!-- Search Input Box -->
+                            <div class="search-wrapper">
+                                <svg class="search-icon-svg" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" id="table-search" class="search-input" placeholder="Cari negara..." oninput="handleTableSearch(this.value)">
+                            </div>
+                            
+                            <button class="action-btn" onclick="exportCSV()">
+                                <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px; vertical-align: middle;"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z" fill="currentColor"/>
+                                </svg>
+                                Ekspor (.CSV)
+                            </button>
+                        </div>
                     </div>
                     <div class="table-wrapper">
                         <table class="custom-table" id="explorer-table">

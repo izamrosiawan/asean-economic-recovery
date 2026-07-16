@@ -3,6 +3,13 @@ let countriesData = [];
 let selectedCountry = 'ASEAN';
 let charts = {};
 
+// Simulator & Control States
+let selectedYear = '2025';
+let isComparisonMode = false;
+let comparisonCountries = ['ASEAN']; // Default compare countries
+let averageSpending = 1000; // Default average spending per tourist (USD)
+let growthRateAdjustment = 0; // What-If forecasting adjustment (percent)
+
 // Palette Colors dynamically reading CSS custom properties
 const COLORS = {
     get primary() { return getComputedStyle(document.body).getPropertyValue('--color-primary').trim() || '#0f172a'; },
@@ -113,8 +120,49 @@ async function fetchData() {
         });
 
         populateCountrySelector();
+        populateComparisonChecklist();
         updateKPIs();
+        updateEconomicCalculations();
+        updateSmartInsights();
         initCharts();
+        
+        // Load detailed SVG map dynamically
+        fetch('asean-map.svg')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load map file');
+                return response.text();
+            })
+            .then(svgText => {
+                const container = document.getElementById('map-container');
+                if (container) {
+                    // Remove existing SVG if any
+                    const oldSvg = container.querySelector('svg');
+                    if (oldSvg) oldSvg.remove();
+                    
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+                    const importedSvg = doc.querySelector('svg');
+                    if (importedSvg) {
+                        importedSvg.setAttribute('id', 'asean-map');
+                        importedSvg.setAttribute('class', 'asean-svg-map');
+                        container.appendChild(importedSvg);
+                    }
+                    initAseanMap();
+                }
+            })
+            .catch(err => {
+                console.error('Gagal memuat peta SVG:', err);
+                const container = document.getElementById('map-container');
+                if (container) {
+                    const fallback = document.createElement('p');
+                    fallback.style.padding = '24px';
+                    fallback.style.textAlign = 'center';
+                    fallback.style.color = 'var(--color-muted)';
+                    fallback.textContent = 'Gagal memuat peta pariwisata interaktif.';
+                    container.appendChild(fallback);
+                }
+            });
+            
         populateTables();
     } catch (error) {
         console.error('Error fetching dataset:', error);
@@ -145,6 +193,8 @@ window.handleCountryChange = function() {
     selectedCountry = selector.value;
     
     updateKPIs();
+    updateEconomicCalculations();
+    updateSmartInsights();
     updateCharts();
     highlightActiveTableRow();
 };
@@ -164,20 +214,26 @@ function updateKPIs() {
     if (!data) return;
 
     const val2019 = data.history['2019'];
-    const val2025 = data.history['2025'];
+    const valActiveYear = data.history[selectedYear];
     
+    // Update KPI Card titles dynamically
+    const lblArrivals = document.getElementById('lbl-arrivals');
+    if (lblArrivals) lblArrivals.textContent = `Kunjungan Wisatawan (${selectedYear})`;
+    const lblRecovery = document.getElementById('lbl-recovery');
+    if (lblRecovery) lblRecovery.textContent = `Tingkat Pemulihan (${selectedYear})`;
+
     // 1. KPI: Arrivals
-    document.getElementById('kpi-arrivals').textContent = formatNumber(val2025);
+    animateCountUp('kpi-arrivals', valActiveYear);
     const arrivalsChangeEl = document.getElementById('kpi-arrivals-change');
     let pctArrivals = 0;
-    if (val2019 && val2025) {
-        const pctChange = ((val2025 - val2019) / val2019) * 100;
+    if (val2019 && valActiveYear !== null && valActiveYear !== undefined) {
+        const pctChange = ((valActiveYear - val2019) / val2019) * 100;
         const sign = pctChange >= 0 ? '+' : '';
         arrivalsChangeEl.textContent = `${sign}${pctChange.toFixed(1)}% vs 2019`;
         arrivalsChangeEl.className = pctChange >= 0 ? 'trend positive' : 'trend negative';
         
         // Progress bar for arrivals = % of 2019 level (capped at 100%)
-        pctArrivals = Math.min(100, Math.max(0, (val2025 / val2019) * 100));
+        pctArrivals = Math.min(100, Math.max(0, (valActiveYear / val2019) * 100));
     } else {
         arrivalsChangeEl.textContent = 'Data tidak lengkap';
         arrivalsChangeEl.className = 'trend';
@@ -186,7 +242,7 @@ function updateKPIs() {
 
     // 2. KPI: Pandemic Worst Drop
     const dropPct = data.metrics.drop_severity_pct;
-    document.getElementById('kpi-drop').textContent = dropPct !== null ? `${dropPct}%` : 'N/A';
+    animateCountUp('kpi-drop', dropPct);
     
     const val2020 = data.history['2020'];
     const val2021 = data.history['2021'];
@@ -201,23 +257,31 @@ function updateKPIs() {
     document.getElementById('kpi-progress-drop').style.width = `${absDrop}%`;
 
     // 3. KPI: Recovery Rate
-    const recRate = data.metrics.recovery_rate_2025_pct;
-    document.getElementById('kpi-recovery').textContent = recRate !== null ? `${recRate}%` : 'N/A';
+    let activeRecRate = null;
+    if (val2019 && valActiveYear !== null && valActiveYear !== undefined) {
+        activeRecRate = parseFloat(((valActiveYear / val2019) * 100).toFixed(2));
+    }
+    animateCountUp('kpi-recovery', activeRecRate);
     
     const recStatusEl = document.getElementById('kpi-recovery-status');
-    if (recRate >= 100) {
-        recStatusEl.textContent = `Pulih Penuh (${data.metrics.years_to_recover})`;
-        recStatusEl.className = 'trend positive';
+    if (activeRecRate !== null) {
+        if (activeRecRate >= 100) {
+            recStatusEl.textContent = `Pulih Penuh (vs 2019)`;
+            recStatusEl.className = 'trend positive';
+        } else {
+            recStatusEl.textContent = `Belum Pulih (vs 2019)`;
+            recStatusEl.className = 'trend negative';
+        }
+        document.getElementById('kpi-progress-recovery').style.width = `${Math.min(100, activeRecRate)}%`;
     } else {
-        recStatusEl.textContent = 'Belum Pulih Sepenuhnya';
-        recStatusEl.className = 'trend negative';
+        recStatusEl.textContent = 'Data tidak lengkap';
+        recStatusEl.className = 'trend';
+        document.getElementById('kpi-progress-recovery').style.width = `0%`;
     }
-    const progressRec = recRate !== null ? Math.min(100, recRate) : 0;
-    document.getElementById('kpi-progress-recovery').style.width = `${progressRec}%`;
 
     // 4. KPI: Resilience Score & Badge
     const score = data.metrics.resilience_score;
-    document.getElementById('kpi-resilience').textContent = score;
+    animateCountUp('kpi-resilience', score);
     
     const badgeEl = document.getElementById('kpi-resilience-badge');
     if (score >= 150) {
@@ -231,7 +295,6 @@ function updateKPIs() {
         badgeEl.className = 'card-badge low';
     }
     
-    // Max reasonable score is 200 (100% recovery + 100% retained)
     const progressScore = Math.min(100, (score / 200) * 100);
     document.getElementById('kpi-progress-resilience').style.width = `${progressScore}%`;
 }
@@ -372,7 +435,7 @@ function initCharts() {
                 ctx.font = "700 9px 'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif";
                 ctx.fillText('PERIODE KRISIS PANDEMI', startX + 15, yAxis.top + 20);
             }
-        }]
+        }, crosshairPlugin]
     });
 
     renderCustomLegend();
@@ -519,7 +582,8 @@ function initCharts() {
                     grid: { display: false }
                 }
             }
-        }
+        },
+        plugins: [crosshairPlugin]
     });
 
     updateCharts();
@@ -528,31 +592,87 @@ function initCharts() {
 // Generate Datasets for main Line Chart
 function getOverviewDatasets(ctx) {
     const isDark = currentTheme === 'dark';
-    return countriesData.map(item => {
-        const isSelected = item.country === selectedCountry;
-        const dataArr = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'].map(yr => item.history[yr]);
-        
-        let color = isDark ? '#2c2c2e' : '#e5e7eb'; // Apple border/tertiary colors for unselected
-        
-        if (isSelected) {
-            color = COLORS.accent;
-        }
-        
-        return {
-            label: item.country,
-            data: dataArr,
-            borderColor: color,
-            backgroundColor: 'transparent',
-            borderWidth: isSelected ? 3 : 1.5,
-            pointBackgroundColor: isSelected ? COLORS.accent : 'transparent',
-            pointBorderColor: isSelected ? '#ffffff' : 'transparent',
-            pointBorderWidth: isSelected ? 2 : 0,
-            pointRadius: isSelected ? 5 : 0,
-            pointHoverRadius: isSelected ? 7 : 4,
-            tension: 0.35, // Smooth elegant curves
-            fill: false
-        };
-    });
+    
+    if (isComparisonMode) {
+        let colorIdx = 0;
+        return countriesData
+            .filter(item => comparisonCountries.includes(item.country))
+            .map(item => {
+                const color = COMPARISON_COLORS[colorIdx % COMPARISON_COLORS.length];
+                colorIdx++;
+                
+                const dataArr = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'].map(yr => item.history[yr]);
+                let gradientBg = 'transparent';
+                if (ctx) {
+                    try {
+                        const grad = ctx.createLinearGradient(0, 0, 0, 350);
+                        const rgb = hexToRgb(color);
+                        if (rgb) {
+                            grad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`);
+                            grad.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.0)`);
+                            gradientBg = grad;
+                        }
+                    } catch (e) {
+                        console.error('Error creating gradient:', e);
+                    }
+                }
+                
+                return {
+                    label: item.country,
+                    data: dataArr,
+                    borderColor: color,
+                    backgroundColor: gradientBg,
+                    borderWidth: 2.5,
+                    pointBackgroundColor: color,
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 1.5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    tension: 0.35,
+                    fill: true
+                };
+            });
+    } else {
+        return countriesData.map(item => {
+            const isSelected = item.country === selectedCountry;
+            const dataArr = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'].map(yr => item.history[yr]);
+            
+            let color = isDark ? '#2c2c2e' : '#e5e7eb'; 
+            let gradientBg = 'transparent';
+            
+            if (isSelected) {
+                color = COLORS.accent;
+                if (ctx) {
+                    try {
+                        const grad = ctx.createLinearGradient(0, 0, 0, 350);
+                        const rgb = hexToRgb(color);
+                        if (rgb) {
+                            grad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`);
+                            grad.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.0)`);
+                            gradientBg = grad;
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            }
+            
+            return {
+                label: item.country,
+                data: dataArr,
+                borderColor: color,
+                backgroundColor: gradientBg,
+                borderWidth: isSelected ? 3.5 : 1.2,
+                pointBackgroundColor: isSelected ? COLORS.accent : 'transparent',
+                pointBorderColor: isSelected ? '#ffffff' : 'transparent',
+                pointBorderWidth: isSelected ? 2 : 0,
+                pointRadius: isSelected ? 5 : 0,
+                pointHoverRadius: isSelected ? 7 : 4,
+                tension: 0.35,
+                fill: isSelected
+            };
+        });
+    }
 }
 
 // Custom Legend for Line Chart
@@ -561,28 +681,51 @@ function renderCustomLegend() {
     if (!legendEl) return;
     legendEl.innerHTML = '';
     
-    countriesData.forEach(item => {
-        const isSelected = item.country === selectedCountry;
-        
+    countriesData.forEach((item, idx) => {
+        const isSelected = isComparisonMode 
+            ? comparisonCountries.includes(item.country) 
+            : item.country === selectedCountry;
+            
         const legendItem = document.createElement('div');
         legendItem.className = `legend-item ${isSelected ? 'selected' : ''}`;
         
-        let dotColor = currentTheme === 'dark' ? '#8e8e93' : '#86868b';
-        if (isSelected) {
-            dotColor = '#ffffff';
+        let color = COLORS.accent;
+        if (isComparisonMode) {
+            const compIdx = comparisonCountries.indexOf(item.country);
+            if (compIdx !== -1) {
+                color = COMPARISON_COLORS[compIdx % COMPARISON_COLORS.length];
+            } else {
+                color = currentTheme === 'dark' ? '#48484a' : '#d1d1d6';
+            }
         }
         
+        let bgStyle = isSelected ? color : 'transparent';
+        let textStyle = isSelected ? '#ffffff' : 'var(--color-primary)';
+        let borderStyle = isSelected ? `1px solid ${color}` : '1px solid var(--color-border)';
+
+        legendItem.setAttribute('style', `background-color: ${bgStyle}; color: ${textStyle}; border: ${borderStyle}`);
+        
         legendItem.innerHTML = `
-            <span class="legend-dot" style="background-color: ${isSelected ? '#ffffff' : COLORS.accent}"></span>
+            <span class="legend-dot" style="background-color: ${isSelected ? '#ffffff' : color}"></span>
             ${item.country === 'ASEAN' ? 'ASEAN' : item.country}
         `;
         
         legendItem.onclick = () => {
-            selectedCountry = item.country;
-            document.getElementById('country-selector').value = item.country;
-            updateKPIs();
-            updateCharts();
-            highlightActiveTableRow();
+            if (isComparisonMode) {
+                const checkbox = document.querySelector(`#comparison-checklist input[value="${item.country}"]`);
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                    handleComparisonCheckChange(checkbox);
+                }
+            } else {
+                selectedCountry = item.country;
+                document.getElementById('country-selector').value = item.country;
+                updateKPIs();
+                updateEconomicCalculations();
+                updateSmartInsights();
+                updateCharts();
+                highlightActiveTableRow();
+            }
         };
         
         legendEl.appendChild(legendItem);
@@ -635,8 +778,12 @@ function getForecastData() {
     // Project starts at the end of history (index 6, 2025)
     const foreArr = Array(6).fill(null);
     foreArr.push(data.history['2025']);
-    foreArr.push(data.forecast['2026']);
-    foreArr.push(data.forecast['2027']);
+    
+    const adj2026 = Math.max(0, Math.round(data.forecast['2026'] * (1 + growthRateAdjustment / 100)));
+    const adj2027 = Math.max(0, Math.round(data.forecast['2027'] * (1 + growthRateAdjustment / 100)));
+    
+    foreArr.push(adj2026);
+    foreArr.push(adj2027);
 
     const paddedHist = [...histArr, null, null];
 
@@ -657,6 +804,7 @@ function updateCharts() {
     updateChartOptions(charts.forecast);
 
     const ctxOverview = document.getElementById('overviewChart').getContext('2d');
+    const ctxForecast = document.getElementById('forecastChart').getContext('2d');
     const isDark = currentTheme === 'dark';
     const isASEAN = selectedCountry === 'ASEAN';
 
@@ -688,10 +836,28 @@ function updateCharts() {
     charts.forecast.data.datasets[0].borderColor = COLORS.accent;
     charts.forecast.data.datasets[0].pointBackgroundColor = COLORS.accent;
     
+    // Create gradient fill for forecast chart actual data
+    if (ctxForecast) {
+        try {
+            const grad = ctxForecast.createLinearGradient(0, 0, 0, 350);
+            const rgb = hexToRgb(COLORS.accent);
+            if (rgb) {
+                grad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`);
+                grad.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.0)`);
+                charts.forecast.data.datasets[0].backgroundColor = grad;
+                charts.forecast.data.datasets[0].fill = true;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    
     charts.forecast.data.datasets[1].data = fore.forecast;
     charts.forecast.data.datasets[1].borderColor = isDark ? '#3899ec' : '#64b5f6'; // Lighter Apple Blue for forecast projection
     charts.forecast.data.datasets[1].pointBorderColor = COLORS.accent;
     charts.forecast.update();
+    
+    updateMapHighlights();
 }
 
 // Populate Tables
@@ -731,85 +897,10 @@ function populateTables() {
     }
 
     // B. Forecast Estimate
-    const foreBody = document.querySelector('#forecast-table tbody');
-    if (foreBody) {
-        foreBody.innerHTML = '';
-        
-        countriesData.forEach(item => {
-            const row = document.createElement('tr');
-            row.id = `row-forecast-${item.country.replace(/\s+/g, '')}`;
-            if (item.country === selectedCountry) row.className = 'active-row';
-            
-            const val2025 = item.history['2025'];
-            const val2027 = item.forecast['2027'];
-            let pctGrowth = '0%';
-            if (val2025 && val2027) {
-                const growth = ((val2027 - val2025) / val2025) * 100;
-                pctGrowth = (growth >= 0 ? '+' : '') + growth.toFixed(1) + '%';
-            }
-            
-            row.innerHTML = `
-                <td><strong>${item.country === 'ASEAN' ? 'ASEAN (Total)' : item.country}</strong></td>
-                <td>${formatNumber(val2025)}</td>
-                <td>${formatNumber(item.forecast['2026'])}</td>
-                <td>${formatNumber(item.forecast['2027'])}</td>
-                <td style="color: var(--color-primary); font-weight: bold">${pctGrowth}</td>
-            `;
-            
-            row.onclick = () => selectCountryFromTable(item.country);
-            foreBody.appendChild(row);
-        });
-    }
+    updateForecastTable();
 
     // C. Data Explorer Table
-    const expHead = document.querySelector('#explorer-table thead');
-    const expBody = document.querySelector('#explorer-table tbody');
-    
-    if (expHead && expBody) {
-        expHead.innerHTML = `
-            <tr>
-                <th>Negara</th>
-                <th>2019</th>
-                <th>2020</th>
-                <th>2021</th>
-                <th>2022</th>
-                <th>2023</th>
-                <th>2024</th>
-                <th>2025</th>
-                <th>2026 (Est)</th>
-                <th>2027 (Est)</th>
-                <th>Drop Severity %</th>
-                <th>Recovery Rate %</th>
-                <th>Score</th>
-            </tr>
-        `;
-        
-        expBody.innerHTML = '';
-        countriesData.forEach(item => {
-            const row = document.createElement('tr');
-            row.id = `row-explorer-${item.country.replace(/\s+/g, '')}`;
-            if (item.country === selectedCountry) row.className = 'active-row';
-            
-            row.innerHTML = `
-                <td><strong>${item.country === 'ASEAN' ? 'ASEAN (Total)' : item.country}</strong></td>
-                <td>${formatNumber(item.history['2019'])}</td>
-                <td>${formatNumber(item.history['2020'])}</td>
-                <td>${formatNumber(item.history['2021'])}</td>
-                <td>${formatNumber(item.history['2022'])}</td>
-                <td>${formatNumber(item.history['2023'])}</td>
-                <td>${formatNumber(item.history['2024'])}</td>
-                <td>${formatNumber(item.history['2025'])}</td>
-                <td style="color: var(--color-primary); font-weight: 500">${formatNumber(item.forecast['2026'])}</td>
-                <td style="color: var(--color-primary); font-weight: 500">${formatNumber(item.forecast['2027'])}</td>
-                <td style="color: ${COLORS.error}; font-weight: 500">${item.metrics.drop_severity_pct}%</td>
-                <td style="color: var(--color-primary); font-weight: 500">${item.metrics.recovery_rate_2025_pct}%</td>
-                <td style="font-weight: bold">${item.metrics.resilience_score}</td>
-            `;
-            
-            row.onclick = () => selectCountryFromTable(item.country);
-            expBody.appendChild(row);
-        });
-    }
+    renderExplorerTable();
 }
 
 // Click on table row to select country globally
@@ -817,6 +908,8 @@ function selectCountryFromTable(countryName) {
     selectedCountry = countryName;
     document.getElementById('country-selector').value = countryName;
     updateKPIs();
+    updateEconomicCalculations();
+    updateSmartInsights();
     updateCharts();
     highlightActiveTableRow();
 }
@@ -875,3 +968,568 @@ window.exportCSV = function() {
     link.click();
     document.body.removeChild(link);
 };
+
+// SIMULATOR AND COMPARISON LOGIC
+
+const COMPARISON_COLORS = [
+    '#0071e3', // Apple Blue
+    '#30d158', // Apple Green
+    '#ff9f0a', // Apple Orange
+    '#bf5af2', // Apple Purple
+    '#ff453a', // Apple Red
+    '#64d2ff', // Apple Light Blue
+    '#ffd60a', // Apple Yellow
+    '#ff2d55', // Apple Pink
+    '#af52de', // Purple Dark
+    '#5856d6', // Indigo
+    '#a2845e'  // Brown
+];
+
+function hexToRgb(hex) {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function populateComparisonChecklist() {
+    const listEl = document.getElementById('comparison-checklist');
+    if (!listEl) return;
+    listEl.innerHTML = '';
+    
+    countriesData.forEach(item => {
+        const div = document.createElement('label');
+        div.className = 'comparison-item';
+        
+        const isChecked = comparisonCountries.includes(item.country);
+        
+        div.innerHTML = `
+            <input type="checkbox" value="${item.country}" ${isChecked ? 'checked' : ''} onchange="handleComparisonCheckChange(this)">
+            <span>${item.country === 'ASEAN' ? 'ASEAN (Gabungan)' : item.country}</span>
+        `;
+        listEl.appendChild(div);
+    });
+}
+
+window.handleComparisonCheckChange = function(checkbox) {
+    const val = checkbox.value;
+    if (checkbox.checked) {
+        if (!comparisonCountries.includes(val)) {
+            comparisonCountries.push(val);
+        }
+    } else {
+        if (comparisonCountries.length > 1) {
+            comparisonCountries = comparisonCountries.filter(c => c !== val);
+        } else {
+            checkbox.checked = true;
+            alert('Pilih minimal satu negara pembanding.');
+        }
+    }
+    updateCharts();
+    updateKPIs();
+    updateEconomicCalculations();
+    updateSmartInsights();
+};
+
+window.handleYearChange = function() {
+    const yearSelector = document.getElementById('year-selector');
+    selectedYear = yearSelector.value;
+    
+    document.querySelectorAll('.spending-year-lbl').forEach(el => el.textContent = selectedYear);
+    
+    updateKPIs();
+    updateEconomicCalculations();
+};
+
+window.toggleComparisonMode = function() {
+    const toggle = document.getElementById('compare-toggle');
+    isComparisonMode = toggle.checked;
+    
+    const panel = document.getElementById('comparison-panel');
+    if (isComparisonMode) {
+        panel.classList.add('active');
+    } else {
+        panel.classList.remove('active');
+    }
+    
+    updateCharts();
+    updateKPIs();
+    updateEconomicCalculations();
+    updateSmartInsights();
+};
+
+window.handleSpendingChange = function(val) {
+    averageSpending = parseInt(val);
+    document.getElementById('spending-value').textContent = '$' + averageSpending.toLocaleString('id-ID');
+    updateEconomicCalculations();
+};
+
+window.handleWhatIfChange = function(val) {
+    growthRateAdjustment = parseInt(val);
+    const valText = growthRateAdjustment > 0 ? `Optimis (+${growthRateAdjustment}%)` : (growthRateAdjustment < 0 ? `Pesimis (${growthRateAdjustment}%)` : 'Moderat (0%)');
+    document.getElementById('whatif-value').textContent = valText;
+    updateCharts();
+    updateForecastTable();
+};
+
+function updateEconomicCalculations() {
+    const data = countriesData.find(d => d.country === selectedCountry);
+    if (!data) return;
+
+    const valActiveYear = data.history[selectedYear];
+    const val2019 = data.history['2019'];
+
+    if (valActiveYear !== null && valActiveYear !== undefined) {
+        const estRevenue = valActiveYear * averageSpending;
+        document.getElementById('sim-revenue').textContent = '$' + estRevenue.toLocaleString('en-US');
+    } else {
+        document.getElementById('sim-revenue').textContent = 'N/A';
+    }
+
+    let totalLoss = 0;
+    let hasCompleteData = true;
+    
+    ['2020', '2021', '2022'].forEach(yr => {
+        const valYr = data.history[yr];
+        if (val2019 && valYr !== null && valYr !== undefined) {
+            const diff = val2019 - valYr;
+            if (diff > 0) {
+                totalLoss += diff * averageSpending;
+            }
+        } else {
+            hasCompleteData = false;
+        }
+    });
+
+    if (val2019 && hasCompleteData) {
+        document.getElementById('sim-loss').textContent = '$' + totalLoss.toLocaleString('en-US');
+    } else {
+        document.getElementById('sim-loss').textContent = 'Data tidak lengkap';
+    }
+}
+
+function updateSmartInsights() {
+    const container = document.getElementById('insight-container');
+    if (!container) return;
+
+    if (isComparisonMode) {
+        container.innerHTML = `
+            <h3><span class="insight-badge" style="background-color: var(--color-accent-light); color: var(--color-accent);">Perbandingan</span> Analisis Multi-Negara</h3>
+            <p class="insight-desc">
+                Anda sedang dalam <strong>Mode Perbandingan</strong> dengan <strong>${comparisonCountries.length} negara</strong> terpilih. 
+                Garis berwarna pada grafik di atas menampilkan perbandingan laju pemulihan sektoral secara real-time. 
+                <br><br>
+                <em>Rekomendasi Analitis:</em> Bandingkan kemiringan kurva dari tahun 2021 ke 2025 untuk melihat kecepatan pemulihan pasar masing-masing destinasi.
+            </p>
+        `;
+        return;
+    }
+
+    const data = countriesData.find(d => d.country === selectedCountry);
+    if (!data) return;
+
+    const rate = data.metrics.recovery_rate_2025_pct;
+    const score = data.metrics.resilience_score;
+    const countryName = data.country === 'ASEAN' ? 'Wilayah ASEAN' : data.country;
+    
+    let badgeText = "Rentan";
+    let badgeClass = "low";
+    let analysisText = "";
+    let recommendation = "";
+
+    if (score >= 150) {
+        badgeText = "Sangat Tangguh";
+        badgeClass = "high";
+        analysisText = `${countryName} memimpin pemulihan regional dengan tingkat pemulihan luar biasa sebesar ${rate}% dibanding kondisi pra-pandemi, menjadikannya destinasi dengan tingkat resiliensi pariwisata tertinggi di kelasnya.`;
+        recommendation = "Fokus pada pariwisata berkelanjutan (sustainable tourism), diversifikasi pasar pariwisata minat khusus, dan optimalkan pengelolaan daya tampung destinasi (carrying capacity).";
+    } else if (score >= 100) {
+        badgeText = "Tangguh";
+        badgeClass = "mod";
+        analysisText = `${countryName} menunjukkan pemulihan tangguh mendekati kapasitas penuh (${rate}%). Kehilangan pasar saat puncak krisis berhasil ditekan dengan baik atau pemulihan berjalan sangat progresif.`;
+        recommendation = "Perluas program kerja sama promosi penerbangan langsung internasional dan maksimalkan kemudahan izin kunjungan (bebas visa kunjungan singkat).";
+    } else if (score >= 70) {
+        badgeText = "Moderat";
+        badgeClass = "mod";
+        analysisText = `${countryName} berada di fase pemulihan moderat (${rate}%). Pemulihan pariwisata berjalan stabil namun belum mencapai tingkat normal awal akibat masih terbatasnya jalur konektivitas udara internasional.`;
+        recommendation = "Lakukan deregulasi tarif penerbangan internasional, luncurkan insentif pariwisata, dan bangun branding destinasi yang lebih kompetitif di kancah global.";
+    } else {
+        badgeText = "Sangat Rentan";
+        badgeClass = "low";
+        analysisText = `${countryName} tergolong sangat rentan dengan tingkat pemulihan baru mencapai ${rate}%. Sektor pariwisata domestik dan internasional masih mengalami tekanan berat pasca-pandemi.`;
+        recommendation = "Dibutuhkan intervensi kebijakan strategis darurat dari pemerintah, insentif pajak bagi pelaku usaha pariwisata, dan restorasi total rute penerbangan udara internasional.";
+    }
+
+    container.innerHTML = `
+        <h3><span class="insight-badge" style="background-color: var(--color-accent-light); color: var(--color-accent);">${badgeText}</span> Profil Analisis: ${countryName}</h3>
+        <p class="insight-desc">
+            ${analysisText}
+            <br><br>
+            <strong>Rekomendasi Kebijakan:</strong> ${recommendation}
+        </p>
+    `;
+}
+
+function updateForecastTable() {
+    const foreBody = document.querySelector('#forecast-table tbody');
+    if (!foreBody) return;
+    
+    foreBody.innerHTML = '';
+    countriesData.forEach(item => {
+        const row = document.createElement('tr');
+        row.id = `row-forecast-${item.country.replace(/\s+/g, '')}`;
+        if (item.country === selectedCountry) row.className = 'active-row';
+        
+        const val2025 = item.history['2025'];
+        const active2026 = Math.max(0, Math.round(item.forecast['2026'] * (1 + growthRateAdjustment / 100)));
+        const active2027 = Math.max(0, Math.round(item.forecast['2027'] * (1 + growthRateAdjustment / 100)));
+        
+        let pctGrowth = '0%';
+        let isPositive = true;
+        if (val2025 && active2027 && val2025 > 0 && active2027 >= 0) {
+            // Compound Annual Growth Rate (CAGR) for 2 years (2025 to 2027)
+            const cagr = (Math.pow(active2027 / val2025, 1 / 2) - 1) * 100;
+            isPositive = cagr >= 0;
+            pctGrowth = (isPositive ? '+' : '') + cagr.toFixed(1) + '%';
+        }
+        
+        const growthColor = isPositive ? 'var(--color-success)' : 'var(--color-error)';
+        
+        row.innerHTML = `
+            <td><strong>${item.country === 'ASEAN' ? 'ASEAN (Total)' : item.country}</strong></td>
+            <td>${formatNumber(val2025)}</td>
+            <td>${formatNumber(active2026)}</td>
+            <td>${formatNumber(active2027)}</td>
+            <td style="color: ${growthColor}; font-weight: bold">${pctGrowth}</td>
+        `;
+        
+        row.onclick = () => selectCountryFromTable(item.country);
+        foreBody.appendChild(row);
+    });
+}
+
+// ==========================================================================
+// ADVANCED INTERACTION FUNCTIONS
+// ==========================================================================
+
+// Sorting and Filter States
+let sortColumn = 'country';
+let sortAscending = true;
+let tableSearchQuery = '';
+
+// Custom Chart.js Crosshair Guide Line Plugin
+const crosshairPlugin = {
+    id: 'crosshair',
+    afterDraw: (chart) => {
+        if (chart.tooltip?._active?.length) {
+            const activePoint = chart.tooltip._active[0];
+            const ctx = chart.ctx;
+            const x = activePoint.element.x;
+            const topY = chart.scales.y.top;
+            const bottomY = chart.scales.y.bottom;
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x, topY);
+            ctx.lineTo(x, bottomY);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(15, 23, 42, 0.15)';
+            ctx.setLineDash([3, 3]);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+};
+
+// Count-Up Animation for Metrik/KPI Numbers
+function animateCountUp(elementId, targetVal) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    if (targetVal === null || targetVal === undefined || isNaN(targetVal)) {
+        el.textContent = 'N/A';
+        return;
+    }
+
+    const target = parseFloat(targetVal);
+    const isArrivals = elementId === 'kpi-arrivals';
+    const isDrop = elementId === 'kpi-drop';
+    const isRecovery = elementId === 'kpi-recovery';
+    const isResilience = elementId === 'kpi-resilience';
+    
+    // Parse current value
+    let currentVal = parseFloat(el.textContent.replace(/[^0-9.-]/g, '')) || 0;
+    if (isArrivals && el.textContent.includes('Juta')) {
+        currentVal = currentVal * 1000000;
+    }
+
+    const duration = 750; // milidetik
+    const startTime = performance.now();
+
+    function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // easeOutQuad curve
+        const ease = progress * (2 - progress);
+        const current = currentVal + (target - currentVal) * ease;
+
+        if (isArrivals) {
+            el.textContent = formatNumber(Math.round(current));
+        } else if (isDrop || isRecovery) {
+            el.textContent = current.toFixed(2) + '%';
+        } else if (isResilience) {
+            el.textContent = current.toFixed(2);
+        } else {
+            el.textContent = current.toFixed(1);
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            if (isArrivals) {
+                el.textContent = formatNumber(target);
+            } else if (isDrop || isRecovery) {
+                el.textContent = target.toFixed(2) + '%';
+            } else if (isResilience) {
+                el.textContent = target.toFixed(2);
+            } else {
+                el.textContent = target;
+            }
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+
+// Inisialisasi Peta Interaktif ASEAN SVG
+function initAseanMap() {
+    const mapCountries = document.querySelectorAll('.map-country');
+    const tooltip = document.getElementById('map-tooltip');
+    const tooltipTitle = document.getElementById('map-tooltip-title');
+    const tooltipDesc = document.getElementById('map-tooltip-desc');
+    
+    if (!mapCountries.length || !tooltip) return;
+
+    mapCountries.forEach(path => {
+        const countryName = path.getAttribute('data-country');
+        const data = countriesData.find(d => d.country === countryName);
+        
+        if (data) {
+            // Berikan kelas warna resiliensi berdasarkan skor
+            const score = data.metrics.resilience_score;
+            if (score >= 150) {
+                path.classList.add('res-high');
+            } else if (score >= 100) {
+                path.classList.add('res-med');
+            } else if (score >= 70) {
+                path.classList.add('res-mod');
+            } else {
+                path.classList.add('res-low');
+            }
+        }
+
+        // Mouse Enter / Hover
+        path.addEventListener('mouseenter', (e) => {
+            if (!data) return;
+            const rate = data.metrics.recovery_rate_2025_pct;
+            const arrivals = data.history[selectedYear];
+            
+            tooltipTitle.textContent = countryName === 'Brunei Darussalam' ? 'Brunei' : countryName;
+            tooltipDesc.innerHTML = `
+                Kunjungan (${selectedYear}): <strong>${formatNumber(arrivals)}</strong><br>
+                Tingkat Pulih: <strong>${rate}%</strong><br>
+                Skor Resiliensi: <strong>${data.metrics.resilience_score}</strong>
+            `;
+            
+            tooltip.classList.add('visible');
+        });
+
+        // Mouse Move (kursor melayang)
+        path.addEventListener('mousemove', (e) => {
+            const mapCard = document.querySelector('.map-card-wrapper');
+            const cardRect = mapCard.getBoundingClientRect();
+            
+            // Atur posisi relatif di dalam kartu
+            const x = e.clientX - cardRect.left;
+            const y = e.clientY - cardRect.top;
+            
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+        });
+
+        // Mouse Leave
+        path.addEventListener('mouseleave', () => {
+            tooltip.classList.remove('visible');
+        });
+
+        // Click Event (ganti negara)
+        path.addEventListener('click', () => {
+            if (isComparisonMode) {
+                const checkbox = document.querySelector(`#comparison-checklist input[value="${countryName}"]`);
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                    handleComparisonCheckChange(checkbox);
+                }
+            } else {
+                selectedCountry = countryName;
+                document.getElementById('country-selector').value = countryName;
+                updateKPIs();
+                updateEconomicCalculations();
+                updateSmartInsights();
+                updateCharts();
+                highlightActiveTableRow();
+            }
+        });
+    });
+    
+    updateMapHighlights();
+}
+
+// Update Highlight Negara Aktif di Peta
+function updateMapHighlights() {
+    document.querySelectorAll('.map-country').forEach(path => {
+        const countryName = path.getAttribute('data-country');
+        if (isComparisonMode) {
+            if (comparisonCountries.includes(countryName)) {
+                path.classList.add('active');
+            } else {
+                path.classList.remove('active');
+            }
+        } else {
+            if (countryName === selectedCountry) {
+                path.classList.add('active');
+            } else {
+                path.classList.remove('active');
+            }
+        }
+    });
+}
+
+// Render Data Explorer Table dengan Pencarian & Pengurutan Kolom
+function renderExplorerTable() {
+    const expHead = document.querySelector('#explorer-table thead');
+    const expBody = document.querySelector('#explorer-table tbody');
+    if (!expHead || !expBody) return;
+
+    const columns = [
+        { id: 'country', label: 'Negara' },
+        { id: '2019', label: '2019' },
+        { id: '2020', label: '2020' },
+        { id: '2021', label: '2021' },
+        { id: '2022', label: '2022' },
+        { id: '2023', label: '2023' },
+        { id: '2024', label: '2024' },
+        { id: '2025', label: '2025' },
+        { id: '2026', label: '2026 (Est)' },
+        { id: '2027', label: '2027 (Est)' },
+        { id: 'drop', label: 'Drop Severity %' },
+        { id: 'recovery', label: 'Recovery Rate %' },
+        { id: 'score', label: 'Score' }
+    ];
+
+    // Buat Headers
+    expHead.innerHTML = `
+        <tr>
+            ${columns.map(col => {
+                const isSorted = sortColumn === col.id;
+                const sortClass = isSorted ? (sortAscending ? 'asc' : 'desc') : '';
+                return `
+                    <th class="sortable-header ${sortClass}" onclick="handleTableSort('${col.id}')">
+                        ${col.label}
+                        <span class="sort-indicator"></span>
+                    </th>
+                `;
+            }).join('')}
+        </tr>
+    `;
+
+    // Filter data berdasarkan kotak input pencarian
+    let filteredData = countriesData.filter(item => {
+        const query = tableSearchQuery.toLowerCase();
+        return item.country.toLowerCase().includes(query);
+    });
+
+    // Urutkan data berdasarkan kolom terpilih
+    filteredData.sort((a, b) => {
+        let valA, valB;
+        
+        if (sortColumn === 'country') {
+            // Pertahankan ASEAN di bagian atas jika pengurutan standar
+            if (a.country === 'ASEAN') return -1;
+            if (b.country === 'ASEAN') return 1;
+            valA = a.country;
+            valB = b.country;
+        } else if (['2019', '2020', '2021', '2022', '2023', '2024', '2025'].includes(sortColumn)) {
+            valA = a.history[sortColumn] || 0;
+            valB = b.history[sortColumn] || 0;
+        } else if (['2026', '2027'].includes(sortColumn)) {
+            valA = a.forecast[sortColumn] || 0;
+            valB = b.forecast[sortColumn] || 0;
+        } else if (sortColumn === 'drop') {
+            valA = a.metrics.drop_severity_pct || 0;
+            valB = b.metrics.drop_severity_pct || 0;
+        } else if (sortColumn === 'recovery') {
+            valA = a.metrics.recovery_rate_2025_pct || 0;
+            valB = b.metrics.recovery_rate_2025_pct || 0;
+        } else if (sortColumn === 'score') {
+            valA = a.metrics.resilience_score || 0;
+            valB = b.metrics.resilience_score || 0;
+        }
+
+        if (valA < valB) return sortAscending ? -1 : 1;
+        if (valA > valB) return sortAscending ? 1 : -1;
+        return 0;
+    });
+
+    // Render baris tabel
+    expBody.innerHTML = '';
+    filteredData.forEach(item => {
+        const row = document.createElement('tr');
+        row.id = `row-explorer-${item.country.replace(/\s+/g, '')}`;
+        if (item.country === selectedCountry) row.className = 'active-row';
+        
+        row.innerHTML = `
+            <td><strong>${item.country === 'ASEAN' ? 'ASEAN (Total)' : item.country}</strong></td>
+            <td>${formatNumber(item.history['2019'])}</td>
+            <td>${formatNumber(item.history['2020'])}</td>
+            <td>${formatNumber(item.history['2021'])}</td>
+            <td>${formatNumber(item.history['2022'])}</td>
+            <td>${formatNumber(item.history['2023'])}</td>
+            <td>${formatNumber(item.history['2024'])}</td>
+            <td>${formatNumber(item.history['2025'])}</td>
+            <td style="color: var(--color-primary); font-weight: 500">${formatNumber(item.forecast['2026'])}</td>
+            <td style="color: var(--color-primary); font-weight: 500">${formatNumber(item.forecast['2027'])}</td>
+            <td style="color: ${COLORS.error}; font-weight: 500">${item.metrics.drop_severity_pct}%</td>
+            <td style="color: var(--color-primary); font-weight: 500">${item.metrics.recovery_rate_2025_pct}%</td>
+            <td style="font-weight: bold">${item.metrics.resilience_score}</td>
+        `;
+        
+        row.onclick = () => selectCountryFromTable(item.country);
+        expBody.appendChild(row);
+    });
+}
+
+// Handler Kotak Input Pencarian
+window.handleTableSearch = function(val) {
+    tableSearchQuery = val;
+    renderExplorerTable();
+};
+
+// Handler Pengurutan Kolom Kepala Tabel
+window.handleTableSort = function(colId) {
+    if (sortColumn === colId) {
+        sortAscending = !sortAscending;
+    } else {
+        sortColumn = colId;
+        sortAscending = true;
+    }
+    renderExplorerTable();
+};
+
