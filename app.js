@@ -3,23 +3,99 @@ let countriesData = [];
 let selectedCountry = 'ASEAN';
 let charts = {};
 
-// Palette Colors matching Flyhyer Minimal
+// Palette Colors dynamically reading CSS custom properties
 const COLORS = {
-    primary: '#000000',
-    secondary: '#e5e7eb',
-    tertiary: '#ffffff',
-    neutral: '#ffffff',
-    surface: '#ffffff',
-    background: '#ffffff',
-    onSurface: '#000000',
-    border: '#e5e7eb',
-    muted: '#ffffff',
-    accent: '#000000',
-    error: '#d92d20'
+    get primary() { return getComputedStyle(document.body).getPropertyValue('--color-primary').trim() || '#0f172a'; },
+    get secondary() { return getComputedStyle(document.body).getPropertyValue('--color-secondary').trim() || '#f1f5f9'; },
+    get border() { return getComputedStyle(document.body).getPropertyValue('--color-border').trim() || '#e2e8f0'; },
+    get accent() { return getComputedStyle(document.body).getPropertyValue('--color-accent').trim() || '#4f46e5'; },
+    get error() { return getComputedStyle(document.body).getPropertyValue('--color-error').trim() || '#ef4444'; },
+    get success() { return getComputedStyle(document.body).getPropertyValue('--color-success').trim() || '#10b981'; }
 };
+
+// SVG Icon definitions
+const MOON_SVG = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />`;
+const SUN_SVG = `
+  <circle cx="12" cy="12" r="5"></circle>
+  <line x1="12" y1="1" x2="12" y2="3"></line>
+  <line x1="12" y1="21" x2="12" y2="23"></line>
+  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+  <line x1="1" y1="12" x2="3" y2="12"></line>
+  <line x1="21" y1="12" x2="23" y2="12"></line>
+  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+`;
+
+let currentTheme = 'light';
+
+// Initialize Theme
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        setTheme('dark');
+    } else {
+        setTheme('light');
+    }
+
+    const toggleBtn = document.getElementById('theme-toggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(nextTheme);
+        });
+    }
+}
+
+// Apply Theme changes
+function setTheme(theme) {
+    currentTheme = theme;
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (theme === 'dark') {
+        body.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+        if (themeIcon) themeIcon.innerHTML = SUN_SVG;
+    } else {
+        body.classList.remove('dark-theme');
+        localStorage.setItem('theme', 'light');
+        if (themeIcon) themeIcon.innerHTML = MOON_SVG;
+    }
+    
+    updateChartThemeColors();
+    updateCharts();
+}
+
+// Update Chart.js base styling on theme switch
+function updateChartThemeColors() {
+    const isDark = currentTheme === 'dark';
+    Chart.defaults.color = isDark ? '#94a3b8' : '#64748b';
+    Chart.defaults.borderColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.08)';
+}
+
+// Tooltip customization helper
+function getTooltipConfig() {
+    const isDark = currentTheme === 'dark';
+    return {
+        backgroundColor: isDark ? '#151f32' : '#ffffff',
+        titleColor: isDark ? '#f8fafc' : '#0f172a',
+        bodyColor: isDark ? '#cbd5e1' : '#475569',
+        borderColor: isDark ? '#334155' : '#e2e8f0',
+        borderWidth: 1,
+        padding: 12,
+        boxPadding: 6,
+        cornerRadius: 8,
+        titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
+        bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 }
+    };
+}
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     fetchData();
 });
 
@@ -180,6 +256,49 @@ window.switchTab = function(tabId) {
     }, 100);
 };
 
+// Update chart options dynamically for Light/Dark Mode
+function updateChartOptions(chart) {
+    if (!chart) return;
+    const isDark = currentTheme === 'dark';
+    
+    // Update scales
+    if (chart.options.scales) {
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.08)';
+        const ticksColor = isDark ? '#94a3b8' : '#64748b';
+        
+        Object.keys(chart.options.scales).forEach(scaleId => {
+            const scale = chart.options.scales[scaleId];
+            if (scale.grid) {
+                scale.grid.color = gridColor;
+            }
+            if (scale.ticks) {
+                scale.ticks.color = ticksColor;
+                if (scale.ticks.font) {
+                    scale.ticks.font.family = '"Inter", -apple-system, sans-serif';
+                }
+            }
+            if (scale.title) {
+                scale.title.color = isDark ? '#f8fafc' : '#0f172a';
+                if (scale.title.font) {
+                    scale.title.font.family = '"Inter", -apple-system, sans-serif';
+                }
+            }
+        });
+    }
+    
+    // Update tooltips
+    if (chart.options.plugins && chart.options.plugins.tooltip) {
+        const tooltip = getTooltipConfig();
+        // Preserve existing callbacks
+        const existingCallbacks = chart.options.plugins.tooltip.callbacks;
+        chart.options.plugins.tooltip = {
+            ...chart.options.plugins.tooltip,
+            ...tooltip,
+            callbacks: existingCallbacks || chart.options.plugins.tooltip.callbacks
+        };
+    }
+}
+
 // Initialize Charts
 function initCharts() {
     const ctxOverview = document.getElementById('overviewChart').getContext('2d');
@@ -187,14 +306,11 @@ function initCharts() {
     const ctxScatter = document.getElementById('resilienceScatterChart').getContext('2d');
     const ctxForecast = document.getElementById('forecastChart').getContext('2d');
 
-    // Chart.js global overrides for Flyhyer Minimal
-    Chart.defaults.color = '#000000';
-    Chart.defaults.font.family = '"Inter", -apple-system, sans-serif';
-    Chart.defaults.font.size = 10;
-    Chart.defaults.borderColor = 'rgba(0, 0, 0, 0.05)';
+    // Chart.js global overrides
+    updateChartThemeColors();
 
     // 1. Overview Chart (Line Chart)
-    const datasetsOverview = getOverviewDatasets();
+    const datasetsOverview = getOverviewDatasets(ctxOverview);
     charts.overview = new Chart(ctxOverview, {
         type: 'line',
         data: {
@@ -207,36 +323,19 @@ function initCharts() {
             interaction: { mode: 'index', intersect: false },
             plugins: {
                 legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#ffffff',
-                    titleColor: '#000000',
-                    bodyColor: '#000000',
-                    borderColor: '#000000',
-                    borderWidth: 1,
-                    padding: 12,
-                    boxPadding: 6,
-                    cornerRadius: 0,
-                    titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
-                    bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 }
-                }
+                tooltip: getTooltipConfig()
             },
             scales: {
                 y: {
-                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    grid: { color: 'rgba(15, 23, 42, 0.08)' },
                     ticks: {
-                        color: '#000000',
-                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(value) {
                             return formatNumber(value);
                         }
                     }
                 },
                 x: { 
-                    grid: { display: false }, 
-                    ticks: { 
-                        color: '#000000',
-                        font: { family: '"Inter", -apple-system, sans-serif' }
-                    } 
+                    grid: { display: false }
                 }
             }
         },
@@ -249,13 +348,14 @@ function initCharts() {
                 
                 const startX = xAxis.getPixelForValue('2020');
                 const endX = xAxis.getPixelForValue('2022');
+                const isDark = currentTheme === 'dark';
                 
                 // Draw subtle translucent gray block for lockdowns
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.01)';
+                ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.02)' : 'rgba(15, 23, 42, 0.015)';
                 ctx.fillRect(startX, yAxis.top, endX - startX, yAxis.bottom - yAxis.top);
                 
                 // Dotted vertical limiters
-                ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(15, 23, 42, 0.1)';
                 ctx.lineWidth = 1;
                 ctx.setLineDash([3, 3]);
                 
@@ -268,7 +368,7 @@ function initCharts() {
                 ctx.setLineDash([]);
                 
                 // Draw Zone Title
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+                ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(15, 23, 42, 0.4)';
                 ctx.font = "700 9px 'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif";
                 ctx.fillText('PERIODE KRISIS PANDEMI', startX + 15, yAxis.top + 20);
             }
@@ -279,6 +379,7 @@ function initCharts() {
 
     // 2. Resilience Score Chart (Bar Chart)
     const sortedResilience = [...countriesData].filter(d => d.country !== 'ASEAN').sort((a,b) => b.metrics.resilience_score - a.metrics.resilience_score);
+    const isDark = currentTheme === 'dark';
 
     charts.resilience = new Chart(ctxResilience, {
         type: 'bar',
@@ -287,25 +388,26 @@ function initCharts() {
             datasets: [{
                 label: 'Skor Ketangguhan',
                 data: sortedResilience.map(d => d.metrics.resilience_score),
-                backgroundColor: sortedResilience.map(d => d.country === selectedCountry ? '#000000' : '#e5e7eb'),
+                backgroundColor: sortedResilience.map(d => d.country === selectedCountry ? COLORS.accent : (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.08)')),
                 borderColor: 'transparent',
                 borderWidth: 0,
-                borderRadius: 4,
+                borderRadius: 6,
                 barThickness: 20
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: getTooltipConfig()
+            },
             scales: {
                 y: { 
-                    grid: { color: COLORS.border },
-                    ticks: { color: '#000000' }
+                    grid: { color: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.08)' }
                 },
                 x: { 
-                    grid: { display: false },
-                    ticks: { color: '#000000' }
+                    grid: { display: false }
                 }
             }
         }
@@ -323,15 +425,7 @@ function initCharts() {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#ffffff',
-                    titleColor: '#000000',
-                    bodyColor: '#000000',
-                    borderColor: '#000000',
-                    borderWidth: 1,
-                    padding: 12,
-                    cornerRadius: 0,
-                    titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
-                    bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 },
+                    ...getTooltipConfig(),
                     callbacks: {
                         label: function(context) {
                             const raw = context.raw;
@@ -342,20 +436,16 @@ function initCharts() {
             },
             scales: {
                 x: {
-                    title: { display: true, text: 'Keparahan Penurunan (Drop Severity %)', color: '#000000', font: { weight: 'bold', family: '"Inter", -apple-system, sans-serif' } },
-                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    title: { display: true, text: 'Keparahan Penurunan (Drop Severity %)', font: { weight: 'bold', family: '"Inter", -apple-system, sans-serif' } },
+                    grid: { color: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.08)' },
                     ticks: {
-                        color: '#000000',
-                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(val) { return val + '%'; }
                     }
                 },
                 y: {
-                    title: { display: true, text: 'Tingkat Pemulihan (Recovery Rate %)', color: '#000000', font: { weight: 'bold', family: '"Inter", -apple-system, sans-serif' } },
-                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    title: { display: true, text: 'Tingkat Pemulihan (Recovery Rate %)', font: { weight: 'bold', family: '"Inter", -apple-system, sans-serif' } },
+                    grid: { color: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.08)' },
                     ticks: {
-                        color: '#000000',
-                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(val) { return val + '%'; }
                     }
                 }
@@ -374,13 +464,13 @@ function initCharts() {
                 {
                     label: 'Historis Aktual',
                     data: forecastData.history,
-                    borderColor: '#000000',
-                    backgroundColor: 'transparent',
-                    borderWidth: 2,
+                    borderColor: COLORS.accent,
+                    backgroundColor: isDark ? 'rgba(99, 102, 241, 0.05)' : 'rgba(79, 70, 229, 0.05)',
+                    borderWidth: 2.5,
                     fill: false,
-                    tension: 0,
+                    tension: 0.4,
                     pointRadius: 4,
-                    pointBackgroundColor: '#000000',
+                    pointBackgroundColor: COLORS.accent,
                     pointBorderColor: '#ffffff',
                     pointBorderWidth: 1.5,
                     pointHoverRadius: 6
@@ -388,16 +478,16 @@ function initCharts() {
                 {
                     label: 'Proyeksi Tren',
                     data: forecastData.forecast,
-                    borderColor: '#000000',
+                    borderColor: isDark ? '#a5b4fc' : '#818cf8',
                     backgroundColor: 'transparent',
-                    borderWidth: 1.5,
-                    borderDash: [4, 4],
+                    borderWidth: 2,
+                    borderDash: [5, 5],
                     fill: false,
-                    tension: 0,
+                    tension: 0.4,
                     pointStyle: 'circle',
-                    pointRadius: 4,
+                    pointRadius: 5,
                     pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#000000',
+                    pointBorderColor: COLORS.accent,
                     pointBorderWidth: 1.5
                 }
             ]
@@ -408,15 +498,7 @@ function initCharts() {
             interaction: { mode: 'index', intersect: false },
             plugins: {
                 tooltip: {
-                    backgroundColor: '#ffffff',
-                    titleColor: '#000000',
-                    bodyColor: '#000000',
-                    borderColor: '#000000',
-                    borderWidth: 1,
-                    padding: 12,
-                    cornerRadius: 0,
-                    titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
-                    bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 },
+                    ...getTooltipConfig(),
                     callbacks: {
                         label: function(context) {
                             return ` ${context.dataset.label}: ${formatNumber(context.raw)}`;
@@ -426,50 +508,60 @@ function initCharts() {
             },
             scales: {
                 y: {
-                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    grid: { color: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.08)' },
                     ticks: {
-                        color: '#000000',
-                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(value) {
                             return formatNumber(value);
                         }
                     }
                 },
                 x: { 
-                    grid: { display: false }, 
-                    ticks: { 
-                        color: '#000000',
-                        font: { family: '"Inter", -apple-system, sans-serif' }
-                    } 
+                    grid: { display: false }
                 }
             }
         }
     });
+
+    updateCharts();
 }
 
 // Generate Datasets for main Line Chart
-function getOverviewDatasets() {
+function getOverviewDatasets(ctx) {
+    const isDark = currentTheme === 'dark';
     return countriesData.map(item => {
         const isSelected = item.country === selectedCountry;
         const dataArr = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'].map(yr => item.history[yr]);
         
-        let color = 'rgba(0, 0, 0, 0.15)'; // Stark gray for non-selected
+        let color = isDark ? 'rgba(148, 163, 184, 0.25)' : 'rgba(100, 116, 139, 0.25)'; // Muted lines
+        let fill = false;
+        let bg = 'transparent';
+        
         if (isSelected) {
-            color = '#000000'; // Stark black for selected
+            color = COLORS.accent;
+            fill = true;
+            if (ctx) {
+                const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+                gradient.addColorStop(0, isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(79, 70, 229, 0.2)');
+                gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+                bg = gradient;
+            } else {
+                bg = isDark ? 'rgba(99, 102, 241, 0.05)' : 'rgba(79, 70, 229, 0.05)';
+            }
         }
         
         return {
             label: item.country,
             data: dataArr,
             borderColor: color,
-            borderWidth: isSelected ? 3 : 1,
-            pointBackgroundColor: isSelected ? '#000000' : 'transparent',
+            backgroundColor: bg,
+            borderWidth: isSelected ? 3 : 1.5,
+            pointBackgroundColor: isSelected ? COLORS.accent : 'transparent',
             pointBorderColor: isSelected ? '#ffffff' : 'transparent',
-            pointBorderWidth: isSelected ? 1.5 : 0,
-            pointRadius: isSelected ? 4 : 0,
-            pointHoverRadius: isSelected ? 6 : 3,
-            tension: 0, // Stark straight lines for Flyhyer look
-            fill: false
+            pointBorderWidth: isSelected ? 2 : 0,
+            pointRadius: isSelected ? 5 : 0,
+            pointHoverRadius: isSelected ? 7 : 4,
+            tension: 0.4, // Curved lines
+            fill: fill
         };
     });
 }
@@ -486,13 +578,13 @@ function renderCustomLegend() {
         const legendItem = document.createElement('div');
         legendItem.className = `legend-item ${isSelected ? 'selected' : ''}`;
         
-        let dotColor = '#e5e7eb';
+        let dotColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : '#e2e8f0';
         if (isSelected) {
-            dotColor = '#000000';
+            dotColor = '#ffffff';
         }
         
         legendItem.innerHTML = `
-            <span class="legend-dot" style="background-color: ${dotColor}"></span>
+            <span class="legend-dot" style="background-color: ${isSelected ? '#ffffff' : COLORS.accent}"></span>
             ${item.country === 'ASEAN' ? 'ASEAN' : item.country}
         `;
         
@@ -510,6 +602,7 @@ function renderCustomLegend() {
 
 // Scatter Plot Datasets
 function getScatterDatasets() {
+    const isDark = currentTheme === 'dark';
     const dataPoints = countriesData
         .filter(d => d.country !== 'ASEAN')
         .map(d => {
@@ -517,7 +610,7 @@ function getScatterDatasets() {
             return {
                 x: d.metrics.drop_severity_pct,
                 y: d.metrics.recovery_rate_2025_pct,
-                r: isSelected ? 10 : 6,
+                r: isSelected ? 12 : 6.5,
                 label: d.country,
                 isSelected: isSelected
             };
@@ -525,10 +618,10 @@ function getScatterDatasets() {
 
     return [{
         data: dataPoints,
-        backgroundColor: dataPoints.map(p => p.isSelected ? '#000000' : 'transparent'),
-        borderColor: dataPoints.map(p => '#000000'),
-        borderWidth: 1.5,
-        hoverBackgroundColor: '#000000'
+        backgroundColor: dataPoints.map(p => p.isSelected ? COLORS.accent : (isDark ? 'rgba(99, 102, 241, 0.15)' : 'rgba(79, 70, 229, 0.08)')),
+        borderColor: dataPoints.map(p => p.isSelected ? (isDark ? '#ffffff' : COLORS.accent) : (isDark ? '#6366f1' : '#4f46e5')),
+        borderWidth: dataPoints.map(p => p.isSelected ? 2 : 1),
+        hoverBackgroundColor: COLORS.accent
     }];
 }
 
@@ -557,16 +650,26 @@ function getForecastData() {
 function updateCharts() {
     if (!charts.overview || !charts.resilience || !charts.scatter || !charts.forecast) return;
 
+    // Update dynamic options based on current theme
+    updateChartOptions(charts.overview);
+    updateChartOptions(charts.resilience);
+    updateChartOptions(charts.scatter);
+    updateChartOptions(charts.forecast);
+
+    const ctxOverview = document.getElementById('overviewChart').getContext('2d');
+    const isDark = currentTheme === 'dark';
+
     // 1. Overview
-    charts.overview.data.datasets = getOverviewDatasets();
+    charts.overview.data.datasets = getOverviewDatasets(ctxOverview);
     charts.overview.update();
     renderCustomLegend();
 
     // 2. Resilience Bar Chart
     const sortedResilience = [...countriesData].filter(d => d.country !== 'ASEAN').sort((a,b) => b.metrics.resilience_score - a.metrics.resilience_score);
-    charts.resilience.data.datasets[0].backgroundColor = sortedResilience.map(d => d.country === selectedCountry ? COLORS.accent : COLORS.border);
-    charts.resilience.data.datasets[0].borderColor = sortedResilience.map(d => d.country === selectedCountry ? COLORS.primary : 'transparent');
-    charts.resilience.data.datasets[0].borderWidth = sortedResilience.map(d => d.country === selectedCountry ? 1 : 0);
+    charts.resilience.data.datasets[0].backgroundColor = sortedResilience.map(d => d.country === selectedCountry ? COLORS.accent : (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.08)'));
+    charts.resilience.data.datasets[0].borderColor = 'transparent';
+    charts.resilience.data.datasets[0].borderWidth = 0;
+    charts.resilience.data.datasets[0].borderRadius = 6;
     charts.resilience.update();
 
     // 3. Scatter Chart
@@ -576,7 +679,12 @@ function updateCharts() {
     // 4. Forecast
     const fore = getForecastData();
     charts.forecast.data.datasets[0].data = fore.history;
+    charts.forecast.data.datasets[0].borderColor = COLORS.accent;
+    charts.forecast.data.datasets[0].pointBackgroundColor = COLORS.accent;
+    
     charts.forecast.data.datasets[1].data = fore.forecast;
+    charts.forecast.data.datasets[1].borderColor = isDark ? '#a5b4fc' : '#818cf8';
+    charts.forecast.data.datasets[1].pointBorderColor = COLORS.accent;
     charts.forecast.update();
 }
 
