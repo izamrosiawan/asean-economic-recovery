@@ -1,119 +1,18 @@
-# ASEAN Tourism Recovery & Economic Resilience Tracker (2019-2027)
+# Tracker Pemulihan & Resiliensi Ekonomi Pariwisata ASEAN (2019-2027)
 
-[English](#english) | [Bahasa Indonesia](#bahasa-indonesia)
-
----
-
-<a name="english"></a>
-## 🇬🇧 English Version
-
-### 🎯 Business Problem Statement
-Following global crises, cross-border tourism policies and infrastructure investments must be targeted based on quantitative sector resilience. Tourism ministries and regional policy coalitions require mathematical frameworks to measure recovery speeds and forecast tourist arrivals to optimize tourism resource allocation.
-
----
-
-### 📌 Executive Summary (30-Second Read)
-* **Objective**: Analyzed the impact of COVID-19 and the recovery paths of the tourism sector across **11 ASEAN countries**, measuring resilience indices and projecting tourist arrivals up to **2027**.
-* **Key Findings**:
-  - **The Crisis Peak**: During the 2020-2021 crisis, international arrivals collapsed to just **2% of 2019 baseline levels** region-wide.
-  - **Resilience Leader**: **Malaysia** leads regional resilience with a composite score of **162.19**, achieving a **161.67% recovery rate** by 2025 (fully recovered by 2024). **Vietnam** follows in 2nd with a **117.55% recovery rate** (score: 117.56).
-  - **Partial Recovery**: **Indonesia** (95.53% recovery, score: 105.20) and **Singapore** (88.47% recovery, score: 90.20) have shown strong, steady recovery but remain slightly below pre-pandemic normal capacity.
-  - **Lagging Markets**: **Myanmar** (22.30% recovery, score: 25.30) and **Brunei** (16.66% recovery, score: 19.14) are classified as highly vulnerable due to extremely slow recovery.
-  - **Composite Forecast (2026-2027)**: Total ASEAN arrivals are projected to reach **203M in 2026** and **241M in 2027**—a **+64.26% growth** compared to 2025, driven by visa relaxations and airline route restorations.
-* **Actionable Recommendations**:
-  - **Benchmark Top Performers**: Adopt successful tourism policies from Malaysia and Vietnam, such as extensive visa-free entry programs and aggressive international marketing campaigns.
-  - **Focussed Policy Intervention**: Direct resources and cross-border infrastructure initiatives toward lagging markets (e.g. Myanmar and Brunei) to restore connectivity and regional attractiveness.
-  - **Quarterly Monitoring**: Implement quarterly tracking of tourism KPIs against these projection models to dynamically optimize airline route frequencies and marketing budgets.
-
----
-
-### 🛡️ Data Quality & Assumptions
-* **Missing Values**: Gaps in monthly arrivals for smaller territories (such as Timor-Leste) were handled by aggregating data to annual frequencies to ensure dataset alignment.
-* **Outlier Treatment**: The extreme collapse of international arrivals in 2020-2022 due to border closures was identified as a structural shock. The OLS forecasting model intentionally restricts its training dataset to the recovery phase (2021-2025) to prevent these anomalies from skewing the linear projection trend.
-* **Assumptions**: We assume the post-pandemic recovery speed observed from 2021 to 2025 is linear and represents a stable macroeconomic trend.
-
----
-
-### 📊 Resilience Ranking Table
-
-Here is the sector resilience index calculated for the 11 ASEAN member nations:
-
-| Rank | Country | Lowest Arrivals (Crisis) | Drop Severity (%) | Recovery Rate 2025 (%) | Recovery Status (Year Recovered) | Composite Resilience Score |
-|:---:|---|:---:|:---:|:---:|:---:|:---:|
-| 1 | **Malaysia** | 134,728 | -99.48% | **161.67%** | Fully Recovered (2024) | **162.19** (Highly Resilient) |
-| 2 | **Viet Nam** | 3,500 | -99.98% | **117.55%** | Fully Recovered (2025) | **117.56** (Highly Resilient) |
-| 3 | **Lao PDR** | 886,447 | **-81.50%** | 95.61% | Partially Recovered | **114.11** (Resilient) |
-| 4 | **Indonesia** | 1,557,530 | **-90.33%** | 95.53% | Partially Recovered | **105.20** (Resilient) |
-| 5 | **Singapore** | 330,059 | -98.27% | 88.47% | Partially Recovered | **90.20** (Moderate) |
-| 6 | **Cambodia** | 196,495 | -97.03% | 84.25% | Fully Recovered (2024) | **87.23** (Moderate) |
-| 7 | **Timor-Leste** | 3,718 | -92.65% | 79.41% | Fully Recovered (2023) | **86.75** (Moderate) |
-| 8 | **Thailand** | 427,869 | -98.93% | 82.61% | Partially Recovered | **83.68** (Moderate) |
-| 9 | **Philippines** | 163,879 | -98.02% | 78.49% | Partially Recovered | **80.47** (Moderate) |
-| 10 | **Myanmar** | 130,947 | -97.00% | 22.30% | Partially Recovered | **25.30** (Vulnerable) |
-| 11 | **Brunei Darussalam** | 110,391 | -97.52% | 16.66% | Partially Recovered | **19.14** (Vulnerable) |
-
----
-
-### 🔍 Forecasting Validation
-To establish model credibility, the OLS linear regression forecast was validated using a time-series split. The model was trained on the post-pandemic recovery data from 2021 to 2024 and validated against actual arrivals in 2025. Additionally, the forecasts were cross-referenced with pre-pandemic baseline figures (2019 levels) to ensure the predicted expansion rates align with historical maximum capacities.
-
----
-
-### 📊 Key Visualizations
-
-#### 1. Sector Resilience Index Ranking
-The bar chart ranks the composite resilience of each country. Malaysia ranks first due to its fast post-pandemic growth exceeding pre-crisis levels. Lao PDR and Indonesia score high on resilience because they successfully defended a larger share of their tourist volume during the pandemic's peak.
-![Resilience Ranking](images/resilience_ranking.png)
-
-#### 2. Quadrant Analysis: Drop Severity vs. Recovery Rate
-This maps the initial pandemic drop (X-axis) against the recovery percentage in 2025 (Y-axis). Countries positioned above the 100% horizontal line have successfully restructured and grown beyond their pre-pandemic market capacity.
-![Resilience Scatter Plot](images/resilience_scatter.png)
-
-#### 3. ASEAN Composite Arrivals Projection (2026-2027)
-Modeled using OLS linear regression of the recovery years (2021-2025), the total regional arrivals are projected to reach **203 million in 2026** and **241 million in 2027**, indicating a complete structural recovery for the region.
-![ASEAN Tourism Forecast](images/asean_forecast.png)
-
----
-
-### ⚠️ Limitations & Next Steps
-* **Limitations**: The model relies entirely on arrival volumes and does not capture tourist expenditures or average length of stay, which are vital indicators of economic impact.
-* **Next Steps**:
-  1. Integrate tourism revenue data to evaluate changes in tourist spending habits post-pandemic.
-  2. Implement multivariate forecasting models (e.g. VAR or ARIMA) incorporating economic covariates such as inflation and exchange rate trends.
-
----
-
-### 🌐 Live Demo
-The interactive dashboard is hosted live on GitHub Pages:
-👉 [https://izamrosiawan.github.io/asean-economic-recovery/](https://izamrosiawan.github.io/asean-economic-recovery/)
-
----
-
-### 🔄 Reproducibility
-* **Environment**: Python 3.11.x and Node.js (for running the dashboard UI).
-* **Execution Sequence**:
-  1. Execute `process_data.py` to clean datasets, compute resilience indexes, and output JSON summaries.
-  2. Run [notebook.ipynb](notebook.ipynb) sequentially to evaluate regression projections.
-  3. Deploy the interactive dashboard locally by opening [index.html](index.html) in a web browser.
-
----
-
-<a name="bahasa-indonesia"></a>
-## 🇮🇩 Versi Bahasa Indonesia
-
-### 🎯 Business Problem Statement
-Pasca krisis global, kebijakan pariwisata lintas batas dan investasi infrastruktur harus diarahkan berdasarkan ketahanan sektor kuantitatif. Kementerian pariwisata dan koalisi kebijakan regional membutuhkan kerangka kerja matematika untuk mengukur kecepatan pemulihan dan memproyeksikan kunjungan wisatawan guna mengoptimalkan alokasi sumber daya.
+### 🎯 Pernyataan Masalah Bisnis
+Pasca krisis global, kebijakan pariwisata lintas batas dan investasi infrastruktur harus diarahkan berdasarkan ketahanan sektor kuantitatif. Kementerian pariwisata dan koalisi kebijakan regional membutuhkan kerangka kerja analisis data untuk mengukur kecepatan pemulihan dan memproyeksikan kunjungan wisatawan guna mengoptimalkan alokasi sumber daya secara strategis.
 
 ---
 
 ### 📌 Ringkasan Eksekutif (30 Detik Baca)
-* **Tujuan**: Menganalisis dampak pandemi COVID-19 dan jalur pemulihan sektor pariwisata di **11 negara ASEAN**, mengukur indeks ketahanan sektoral, serta memproyeksikan kunjungan wisatawan hingga tahun **2027**.
+* **Tujuan**: Menganalisis dampak pandemi COVID-19 dan jalur pemulihan sektor pariwisata di **11 negara ASEAN** (termasuk Timor-Leste), mengukur indeks ketahanan sektoral, serta memproyeksikan kunjungan wisatawan hingga tahun **2027**.
 * **Temuan Utama**:
   - **Titik Terendah Krisis**: Pada puncak pandemi (2020-2021), kunjungan wisatawan mancanegara anjlok hingga menyisakan hanya **2% dari kondisi normal 2019** di seluruh kawasan.
   - **Pemimpin Resiliensi**: **Malaysia** memimpin ketangguhan regional dengan skor komposit **162,19**, mencapai tingkat pemulihan sebesar **161,67%** pada tahun 2025 (pulih penuh sejak 2024). **Vietnam** menyusul di peringkat kedua dengan tingkat pemulihan **117,55%** (skor: 117,56).
   - **Pemulihan Sebagian**: **Indonesia** (pemulihan 95,53%, skor: 105,20) dan **Singapura** (pemulihan 88,47%, skor: 90,20) menunjukkan tren pemulihan yang kuat namun masih sedikit di bawah kapasitas normal sebelum pandemi.
   - **Pasar yang Rentan**: **Myanmar** (pemulihan 22,30%, skor: 25,30) dan **Brunei** (pemulihan 16,66%, skor: 19,14) dikategorikan sangat rentan karena pemulihan yang lambat.
-  - **Proyeksi Kawasan (2026-2027)**: Total kunjungan ke ASEAN diproyeksikan mencapai **203 juta pada 2026** dan **241 juta pada 2027**—menunjukkan pertumbuhan sebesar **+64,26%** dibanding tahun 2025.
+  - **Proyeksi Kawasan Realistis (2026-2027)**: Total kunjungan ke ASEAN diproyeksikan mencapai **164,3 juta pada 2026** dan **169,9 juta pada 2027**—menunjukkan tren pertumbuhan stabil melandai yang realistis pasca pemulihan cepat (menggunakan model regresi linear teredam/capped).
 * **Rekomendasi Bisnis**:
   - **Benchmark Kebijakan Terbaik**: Adopsi kebijakan sukses dari Malaysia dan Vietnam, seperti pelonggaran visa kunjungan dan kampanye pemasaran internasional yang agresif.
   - **Intervensi Kebijakan Terarah**: Fokuskan alokasi sumber daya dan konektivitas rute udara ke negara-negara yang lambat pulih (Brunei dan Myanmar) untuk memulihkan daya tarik regional secara menyeluruh.
@@ -124,7 +23,7 @@ Pasca krisis global, kebijakan pariwisata lintas batas dan investasi infrastrukt
 ### 🛡️ Kualitas Data & Asumsi
 * **Missing Values**: Kesenjangan data kunjungan bulanan untuk wilayah yang lebih kecil (seperti Timor-Leste) diatasi dengan agregasi data ke total tahunan demi keselarasan dataset.
 * **Outlier Treatment**: Penurunan drastis wisatawan mancanegara pada 2020-2022 akibat penutupan batas negara dikategorikan sebagai guncangan struktural luar biasa. Model proyeksi OLS membatasi data latih hanya pada fase pemulihan (2021-2025) agar penurunan ekstrem tersebut tidak mendistorsi kemiringan tren.
-* **Asumsi**: Kami mengasumsikan kecepatan pemulihan pasca-pandemi (2021-2025) berbentuk linear dan mencerminkan tren makroekonomi yang stabil.
+* **Asumsi**: Kecepatan pemulihan pasca-pandemi (2021-2025) diasumsikan melandai (*plateauing*) saat mendekati batas atas kapasitas puncak 2019 demi menjaga proyeksi yang masuk akal dan profesional.
 
 ---
 
@@ -164,8 +63,22 @@ Memetakan keparahan drop saat krisis (Sumbu X) vs. tingkat pemulihan 2025 (Sumbu
 ![Pemetaan Ketahanan Sektor](images/resilience_scatter.png)
 
 #### 3. Proyeksi Akumulatif Kunjungan ASEAN (2026-2027)
-Menggunakan model Regresi Linear OLS, total kunjungan ke kawasan ASEAN diproyeksikan tumbuh pesat hingga mencapai **203 juta kunjungan pada 2026** dan **241 juta pada 2027**, menunjukkan pertumbuhan **+64,26%** dibanding realisasi tahun 2025.
+Menggunakan model Regresi Linear OLS teredam, total kunjungan ke kawasan ASEAN diproyeksikan tumbuh stabil mencapai **164,3 juta kunjungan pada 2026** dan **169,9 juta pada 2027**, menghindari pertumbuhan eksponensial tak terkontrol yang tidak realistis secara infrastruktur pariwisata.
 ![Proyeksi Pariwisata ASEAN](images/asean_forecast.png)
+
+---
+
+### 🗄️ Pemodelan Database & Analisis SQL
+Untuk menunjukkan kompetensi analisis data relasional dan database querying tingkat lanjut, proyek ini menyertakan folder [sql/](sql/) berisi model database lengkap:
+* **[schema.sql](sql/schema.sql)**: Rancangan skema DDL relasional yang ternormalisasi untuk tabel negara (`countries`), tabel transaksi kunjungan (`historical_arrivals`), dan tabel metrik performa (`country_metrics`).
+* **[seed_data.sql](sql/seed_data.sql)**: Skrip SQL insert DML lengkap berisi data historis riil dan proyeksi pariwisata 10 negara ASEAN + Timor-Leste untuk memudahkan pengujian.
+* **[analytics_queries.sql](sql/analytics_queries.sql)**: Kueri SQL analisis tingkat lanjut yang menunjukkan penguasaan query kompleks, seperti:
+  1. *Pandemic Drop Severity %* menggunakan CTE (Common Table Expressions) & Join.
+  2. *Recovery Rate %* untuk melacak tingkat pemulihan negara pada 2025.
+  3. *Compound Annual Growth Rate* (CAGR) proyeksi 2-tahunan (2025-2027) menggunakan fungsi matematika `POWER()`.
+  4. *Year-over-Year (YoY) Growth Rate* menggunakan **SQL Window Functions (`LAG() OVER ...`)**.
+  5. *Regional Resilience Classification & Rankings* menggunakan **SQL Window Functions (`DENSE_RANK() OVER ...`)** dan logika kondisional `CASE WHEN`.
+  6. *Cumulative Revenue Loss* akibat krisis pariwisata (2020-2022) menggunakan parameter pengali ekonomi pengeluaran wisatawan.
 
 ---
 
@@ -194,6 +107,7 @@ Dashboard interaktif dihosting secara live di GitHub Pages:
 
 ## ⚙️ Teknologi yang Digunakan
 * **Python 3.11** (Pandas, NumPy, Scikit-learn, Statsmodels)
-* **HTML5 / CSS3 / JavaScript** (Dashboard interaktif dengan tema Flyhyer Minimal)
+* **SQL** (PostgreSQL / SQLite kompatibel untuk database relational modeling)
+* **HTML5 / CSS3 / JavaScript** (Dashboard interaktif dengan tema minimalis premium)
 * **Jupyter Notebook** (Untuk data processing pipeline)
 * **Git** (Version control)
