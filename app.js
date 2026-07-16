@@ -532,36 +532,25 @@ function getOverviewDatasets(ctx) {
         const isSelected = item.country === selectedCountry;
         const dataArr = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'].map(yr => item.history[yr]);
         
-        let color = isDark ? 'rgba(148, 163, 184, 0.25)' : 'rgba(100, 116, 139, 0.25)'; // Muted lines
-        let fill = false;
-        let bg = 'transparent';
+        let color = isDark ? '#2c2c2e' : '#e5e7eb'; // Apple border/tertiary colors for unselected
         
         if (isSelected) {
             color = COLORS.accent;
-            fill = true;
-            if (ctx) {
-                const gradient = ctx.createLinearGradient(0, 0, 0, 350);
-                gradient.addColorStop(0, isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(79, 70, 229, 0.2)');
-                gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
-                bg = gradient;
-            } else {
-                bg = isDark ? 'rgba(99, 102, 241, 0.05)' : 'rgba(79, 70, 229, 0.05)';
-            }
         }
         
         return {
             label: item.country,
             data: dataArr,
             borderColor: color,
-            backgroundColor: bg,
+            backgroundColor: 'transparent',
             borderWidth: isSelected ? 3 : 1.5,
             pointBackgroundColor: isSelected ? COLORS.accent : 'transparent',
             pointBorderColor: isSelected ? '#ffffff' : 'transparent',
             pointBorderWidth: isSelected ? 2 : 0,
             pointRadius: isSelected ? 5 : 0,
             pointHoverRadius: isSelected ? 7 : 4,
-            tension: 0.4, // Curved lines
-            fill: fill
+            tension: 0.35, // Smooth elegant curves
+            fill: false
         };
     });
 }
@@ -578,7 +567,7 @@ function renderCustomLegend() {
         const legendItem = document.createElement('div');
         legendItem.className = `legend-item ${isSelected ? 'selected' : ''}`;
         
-        let dotColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : '#e2e8f0';
+        let dotColor = currentTheme === 'dark' ? '#8e8e93' : '#86868b';
         if (isSelected) {
             dotColor = '#ffffff';
         }
@@ -618,8 +607,8 @@ function getScatterDatasets() {
 
     return [{
         data: dataPoints,
-        backgroundColor: dataPoints.map(p => p.isSelected ? COLORS.accent : (isDark ? 'rgba(99, 102, 241, 0.15)' : 'rgba(79, 70, 229, 0.08)')),
-        borderColor: dataPoints.map(p => p.isSelected ? (isDark ? '#ffffff' : COLORS.accent) : (isDark ? '#6366f1' : '#4f46e5')),
+        backgroundColor: dataPoints.map(p => p.isSelected ? COLORS.accent : (isDark ? '#2c2c2e' : '#f5f5f7')),
+        borderColor: dataPoints.map(p => p.isSelected ? (isDark ? '#ffffff' : COLORS.accent) : (isDark ? '#3a3a3c' : '#d1d1d6')),
         borderWidth: dataPoints.map(p => p.isSelected ? 2 : 1),
         hoverBackgroundColor: COLORS.accent
     }];
@@ -666,10 +655,10 @@ function updateCharts() {
 
     // 2. Resilience Bar Chart
     const sortedResilience = [...countriesData].filter(d => d.country !== 'ASEAN').sort((a,b) => b.metrics.resilience_score - a.metrics.resilience_score);
-    charts.resilience.data.datasets[0].backgroundColor = sortedResilience.map(d => d.country === selectedCountry ? COLORS.accent : (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.08)'));
+    charts.resilience.data.datasets[0].backgroundColor = sortedResilience.map(d => d.country === selectedCountry ? COLORS.accent : (isDark ? '#2c2c2e' : '#f5f5f7'));
     charts.resilience.data.datasets[0].borderColor = 'transparent';
     charts.resilience.data.datasets[0].borderWidth = 0;
-    charts.resilience.data.datasets[0].borderRadius = 6;
+    charts.resilience.data.datasets[0].borderRadius = 4; // Apple Minimal card corner radius
     charts.resilience.update();
 
     // 3. Scatter Chart
@@ -683,7 +672,7 @@ function updateCharts() {
     charts.forecast.data.datasets[0].pointBackgroundColor = COLORS.accent;
     
     charts.forecast.data.datasets[1].data = fore.forecast;
-    charts.forecast.data.datasets[1].borderColor = isDark ? '#a5b4fc' : '#818cf8';
+    charts.forecast.data.datasets[1].borderColor = isDark ? '#3899ec' : '#64b5f6'; // Lighter Apple Blue for forecast projection
     charts.forecast.data.datasets[1].pointBorderColor = COLORS.accent;
     charts.forecast.update();
 }
