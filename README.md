@@ -7,6 +7,11 @@
 <a name="english"></a>
 ## 🇬🇧 English Version
 
+### 🎯 Business Problem Statement
+Following global crises, cross-border tourism policies and infrastructure investments must be targeted based on quantitative sector resilience. Tourism ministries and regional policy coalitions require mathematical frameworks to measure recovery speeds and forecast tourist arrivals to optimize tourism resource allocation.
+
+---
+
 ### 📌 Executive Summary (30-Second Read)
 * **Objective**: Analyzed the impact of COVID-19 and the recovery paths of the tourism sector across **11 ASEAN countries**, measuring resilience indices and projecting tourist arrivals up to **2027**.
 * **Key Findings**:
@@ -19,6 +24,13 @@
   - **Benchmark Top Performers**: Adopt successful tourism policies from Malaysia and Vietnam, such as extensive visa-free entry programs and aggressive international marketing campaigns.
   - **Focussed Policy Intervention**: Direct resources and cross-border infrastructure initiatives toward lagging markets (e.g. Myanmar and Brunei) to restore connectivity and regional attractiveness.
   - **Quarterly Monitoring**: Implement quarterly tracking of tourism KPIs against these projection models to dynamically optimize airline route frequencies and marketing budgets.
+
+---
+
+### 🛡️ Data Quality & Assumptions
+* **Missing Values**: Gaps in monthly arrivals for smaller territories (such as Timor-Leste) were handled by aggregating data to annual frequencies to ensure dataset alignment.
+* **Outlier Treatment**: The extreme collapse of international arrivals in 2020-2022 due to border closures was identified as a structural shock. The OLS forecasting model intentionally restricts its training dataset to the recovery phase (2021-2025) to prevent these anomalies from skewing the linear projection trend.
+* **Assumptions**: We assume the post-pandemic recovery speed observed from 2021 to 2025 is linear and represents a stable macroeconomic trend.
 
 ---
 
@@ -42,6 +54,11 @@ Here is the sector resilience index calculated for the 11 ASEAN member nations:
 
 ---
 
+### 🔍 Forecasting Validation
+To establish model credibility, the OLS linear regression forecast was validated using a time-series split. The model was trained on the post-pandemic recovery data from 2021 to 2024 and validated against actual arrivals in 2025. Additionally, the forecasts were cross-referenced with pre-pandemic baseline figures (2019 levels) to ensure the predicted expansion rates align with historical maximum capacities.
+
+---
+
 ### 📊 Key Visualizations
 
 #### 1. Sector Resilience Index Ranking
@@ -58,8 +75,30 @@ Modeled using OLS linear regression of the recovery years (2021-2025), the total
 
 ---
 
+### ⚠️ Limitations & Next Steps
+* **Limitations**: The model relies entirely on arrival volumes and does not capture tourist expenditures or average length of stay, which are vital indicators of economic impact.
+* **Next Steps**:
+  1. Integrate tourism revenue data to evaluate changes in tourist spending habits post-pandemic.
+  2. Implement multivariate forecasting models (e.g. VAR or ARIMA) incorporating economic covariates such as inflation and exchange rate trends.
+
+---
+
+### 🔄 Reproducibility
+* **Environment**: Python 3.11.x and Node.js (for running the dashboard UI).
+* **Execution Sequence**:
+  1. Execute `process_data.py` to clean datasets, compute resilience indexes, and output JSON summaries.
+  2. Run [notebook.ipynb](notebook.ipynb) sequentially to evaluate regression projections.
+  3. Deploy the interactive dashboard locally by opening [index.html](index.html) in a web browser.
+
+---
+
 <a name="bahasa-indonesia"></a>
 ## 🇮🇩 Versi Bahasa Indonesia
+
+### 🎯 Business Problem Statement
+Pasca krisis global, kebijakan pariwisata lintas batas dan investasi infrastruktur harus diarahkan berdasarkan ketahanan sektor kuantitatif. Kementerian pariwisata dan koalisi kebijakan regional membutuhkan kerangka kerja matematika untuk mengukur kecepatan pemulihan dan memproyeksikan kunjungan wisatawan guna mengoptimalkan alokasi sumber daya.
+
+---
 
 ### 📌 Ringkasan Eksekutif (30 Detik Baca)
 * **Tujuan**: Menganalisis dampak pandemi COVID-19 dan jalur pemulihan sektor pariwisata di **11 negara ASEAN**, mengukur indeks ketahanan sektoral, serta memproyeksikan kunjungan wisatawan hingga tahun **2027**.
@@ -73,6 +112,13 @@ Modeled using OLS linear regression of the recovery years (2021-2025), the total
   - **Benchmark Kebijakan Terbaik**: Adopsi kebijakan sukses dari Malaysia dan Vietnam, seperti pelonggaran visa kunjungan dan kampanye pemasaran internasional yang agresif.
   - **Intervensi Kebijakan Terarah**: Fokuskan alokasi sumber daya dan konektivitas rute udara ke negara-negara yang lambat pulih (Brunei dan Myanmar) untuk memulihkan daya tarik regional secara menyeluruh.
   - **Evaluasi KPI Berkala**: Lakukan pelacakan KPI kunjungan setiap kuartal berdasarkan model proyeksi ini untuk mengoptimalkan frekuensi rute penerbangan dan anggaran promosi pariwisata.
+
+---
+
+### 🛡️ Kualitas Data & Asumsi
+* **Missing Values**: Kesenjangan data kunjungan bulanan untuk wilayah yang lebih kecil (seperti Timor-Leste) diatasi dengan agregasi data ke total tahunan demi keselarasan dataset.
+* **Outlier Treatment**: Penurunan drastis wisatawan mancanegara pada 2020-2022 akibat penutupan batas negara dikategorikan sebagai guncangan struktural luar biasa. Model proyeksi OLS membatasi data latih hanya pada fase pemulihan (2021-2025) agar penurunan ekstrem tersebut tidak mendistorsi kemiringan tren.
+* **Asumsi**: Kami mengasumsikan kecepatan pemulihan pasca-pandemi (2021-2025) berbentuk linear dan mencerminkan tren makroekonomi yang stabil.
 
 ---
 
@@ -96,6 +142,11 @@ Berikut adalah peringkat ketahanan sektor pariwisata hasil analisis data pariwis
 
 ---
 
+### 🔍 Validasi Model Proyeksi
+Untuk menjamin kredibilitas model, proyeksi regresi linear OLS divalidasi menggunakan metode pembagian deret waktu (time-series split). Model dilatih pada data pemulihan 2021-2024 dan diuji terhadap realisasi kedatangan 2025. Selain itu, hasil proyeksi dicocokkan kembali dengan level dasar pra-pandemi (level 2019) untuk memastikan laju pertumbuhan yang diprediksi tetap berada dalam batas kapasitas historis.
+
+---
+
 ### 📊 Visualisasi Utama
 
 #### 1. Perbandingan Indeks Ketangguhan Sektoral
@@ -109,6 +160,23 @@ Memetakan keparahan drop saat krisis (Sumbu X) vs. tingkat pemulihan 2025 (Sumbu
 #### 3. Proyeksi Akumulatif Kunjungan ASEAN (2026-2027)
 Menggunakan model Regresi Linear OLS, total kunjungan ke kawasan ASEAN diproyeksikan tumbuh pesat hingga mencapai **203 juta kunjungan pada 2026** dan **241 juta pada 2027**, menunjukkan pertumbuhan **+64,26%** dibanding realisasi tahun 2025.
 ![Proyeksi Pariwisata ASEAN](images/asean_forecast.png)
+
+---
+
+### ⚠️ Keterbatasan & Langkah Selanjutnya
+* **Keterbatasan**: Model regresi hanya bergantung pada volume kedatangan fisik dan tidak memperhitungkan lama tinggal wisatawan maupun pengeluaran riil per kunjungan.
+* **Langkah Selanjutnya**:
+  1. Integrasikan data pendapatan pariwisata untuk mengevaluasi perubahan pola belanja wisatawan setelah pandemi.
+  2. Implementasikan pemodelan multivariat (seperti VAR atau ARIMA) dengan menyertakan kovariat ekonomi seperti tingkat inflasi dan fluktuasi nilai tukar.
+
+---
+
+### 🔄 Reproduksibilitas
+* **Lingkungan**: Python 3.11.x dan Node.js (untuk dashboard).
+* **Urutan Eksekusi**:
+  1. Jalankan `process_data.py` untuk mengolah dataset, menghitung indeks ketahanan, dan mengekspor ke berkas JSON.
+  2. Jalankan [notebook.ipynb](notebook.ipynb) secara berurutan untuk mengevaluasi proyeksi regresi.
+  3. Buka berkas [index.html](index.html) langsung pada web browser untuk menggunakan dashboard interaktif secara lokal.
 
 ---
 
