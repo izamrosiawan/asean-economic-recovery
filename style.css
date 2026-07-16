@@ -1,39 +1,42 @@
 /* ==========================================================================
-   SENNEP EDITORIAL WARMTH DESIGN SYSTEM
+   FLYHYER MINIMAL DESIGN SYSTEM
+   Stark, high-contrast, flat monochrome styling with airline service aesthetic.
    ========================================================================== */
 
 :root {
     /* Color Palette */
-    --color-primary: #202020;
-    --color-secondary: #303136;
-    --color-tertiary: #E5E7EB;
-    --color-neutral: #FFFFFF;
-    --color-surface: #FFFFFF;
-    --color-background: #F4C84A;
-    --color-on-surface: #202020;
-    --color-border: #E5E7EB;
-    --color-muted: #F7F1DB;
+    --color-primary: #000000;
+    --color-secondary: #e5e7eb;
+    --color-tertiary: #ffffff;
+    --color-neutral: #ffffff;
+    --color-surface: #ffffff;
+    --color-background: #ffffff;
+    --color-on-surface: #000000;
+    --color-border: #e5e7eb;
+    --color-muted: #ffffff;
     --color-accent: #000000;
-    --color-error: #C84C4C;
+    --color-error: #d92d20;
 
     /* Typography Fonts */
-    --font-serif: 'Vesterbro', 'Playfair Display', Georgia, serif;
-    --font-sans: 'Lato', -apple-system, sans-serif;
+    --font-sans: "HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     /* Rounded Border Radii */
     --rounded-none: 0px;
     --rounded-sm: 4px;
     --rounded-md: 8px;
-    --rounded-lg: 16px;
-    --rounded-xl: 25px;
+    --rounded-lg: 12px;
+    --rounded-xl: 16px;
     --rounded-full: 9999px;
 
     /* Spacing Scales */
-    --space-xs: 8px;
-    --space-sm: 20px;
-    --space-md: 40px;
-    --space-lg: 82px;
-    --space-xl: 140px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 20px;
+    --space-base: 16px;
+    --space-gutter: 24px;
+    --space-margin: 32px;
 }
 
 /* ==========================================================================
@@ -52,100 +55,97 @@ body {
     min-height: 100vh;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    padding-bottom: var(--space-lg);
+    padding-bottom: var(--space-margin);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 ::-webkit-scrollbar-track {
     background: var(--color-background);
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--color-secondary);
-    border-radius: var(--rounded-full);
+    background: var(--color-primary);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent);
+    background: #333333;
 }
 
 /* ==========================================================================
-   TYPOGRAPHY HIERARCHY
+   TYPOGRAPHY HIERARCHY (Flyhyer Spec)
    ========================================================================== */
 .headline-display {
-    font-family: var(--font-serif);
-    font-size: 70px;
+    font-family: var(--font-sans);
+    font-size: 32px;
     font-weight: 700;
-    line-height: 84px;
-    letter-spacing: 0;
+    line-height: 38px;
+    letter-spacing: 0px;
 }
 
 .headline-lg {
-    font-family: var(--font-serif);
-    font-size: 61px;
-    font-weight: 600;
-    line-height: 73px;
-    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-size: 27px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: -0.14px;
 }
 
 .headline-md {
-    font-family: var(--font-serif);
-    font-size: 53px;
-    font-weight: 600;
-    line-height: 73px;
-    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0px;
 }
 
 .headline-sm {
-    font-family: var(--font-serif);
-    font-size: 46px;
-    font-weight: 600;
-    line-height: 73px;
-    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 23px;
+    letter-spacing: 0px;
 }
 
 .body-lg {
-    font-family: var(--font-serif);
-    font-size: 40px;
-    font-weight: 600;
-    line-height: 60px;
-    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0px;
 }
 
 .body-md {
     font-family: var(--font-sans);
     font-size: 16px;
     font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0;
+    line-height: normal;
+    letter-spacing: 0px;
 }
 
 .body-sm {
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 20px;
-    letter-spacing: 0;
+    letter-spacing: 0px;
 }
 
 .label-lg {
     font-family: var(--font-sans);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 24px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0px;
 }
 
 .label-md {
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 20px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0px;
 }
 
 .label-sm {
@@ -153,8 +153,15 @@ body {
     font-size: 12px;
     font-weight: 400;
     line-height: 16px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    letter-spacing: 0px;
+}
+
+.caption {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0px;
 }
 
 /* ==========================================================================
@@ -163,7 +170,7 @@ body {
 .app-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--space-sm);
+    padding: 0 var(--space-gutter);
 }
 
 .main-content {
@@ -171,16 +178,16 @@ body {
 }
 
 /* ==========================================================================
-   APP HEADER NAVIGATION (TOP HEADER)
+   APP HEADER NAVIGATION
    ========================================================================== */
 .app-header {
     background-color: var(--color-background);
-    border-bottom: 2px solid var(--color-primary);
-    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-secondary);
+    padding: var(--space-lg) 0;
     position: sticky;
     top: 0;
     z-index: 100;
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-margin);
 }
 
 .header-inner {
@@ -189,23 +196,23 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 var(--space-sm);
+    padding: 0 var(--space-gutter);
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 12px;
-    color: var(--color-accent);
+    gap: 8px;
+    color: var(--color-primary);
 }
 
 .brand-icon {
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .brand h2 {
-    font-family: var(--font-serif);
-    font-size: 24px;
+    font-family: var(--font-sans);
+    font-size: 20px;
     font-weight: 700;
     letter-spacing: -0.5px;
 }
@@ -213,33 +220,31 @@ body {
 .nav-menu {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-md);
 }
 
-/* Text-only tertiary navigation button */
 .nav-btn {
     background: transparent;
     border: none;
     outline: none;
     color: var(--color-primary);
     font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400;
     padding: 8px 0px;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: opacity 0.2s ease;
     border-bottom: 2px solid transparent;
+    opacity: 0.6;
 }
 
 .nav-btn:hover {
-    color: var(--color-accent);
+    opacity: 1;
 }
 
 .nav-btn.active {
-    color: var(--color-accent);
-    border-bottom: 2px solid var(--color-accent);
+    opacity: 1;
+    border-bottom: 2px solid var(--color-primary);
     font-weight: 700;
 }
 
@@ -252,47 +257,45 @@ body {
     font-family: var(--font-sans);
     font-size: 13px;
     color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 600;
-    border-bottom: 1px solid var(--color-primary);
-    transition: color 0.2s ease, border-color 0.2s ease;
+    text-decoration: underline;
+    font-weight: 400;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 .footer-link:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
+    opacity: 0.8;
 }
 
 /* ==========================================================================
-   HERO / PAGE HEADER
+   TOP HEADER
    ========================================================================== */
 .top-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-sm);
-    border-bottom: 1px solid var(--color-primary);
+    margin-bottom: var(--space-margin);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-secondary);
     margin-top: var(--space-sm);
 }
 
 .header-title h1 {
-    font-family: var(--font-serif);
-    font-size: 53px; /* headline-md scale */
+    font-family: var(--font-sans);
+    font-size: 32px;
     font-weight: 700;
-    letter-spacing: -1px;
-    margin-bottom: 8px;
-    color: var(--color-accent);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+    color: var(--color-primary);
 }
 
 .header-title p {
-    color: var(--color-secondary);
+    color: var(--color-primary);
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
+    opacity: 0.6;
 }
 
 /* Custom Styled Select Dropdown (matches input token) */
@@ -303,38 +306,37 @@ body {
 #country-selector {
     background-color: var(--color-surface);
     color: var(--color-on-surface);
-    border: 1px solid var(--color-border);
-    padding: 16px 40px 16px 20px;
-    border-radius: var(--rounded-md);
+    border: 1px solid var(--color-primary);
+    padding: 8px 36px 8px 12px;
+    border-radius: var(--rounded-sm);
     font-family: var(--font-sans);
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 400;
     outline: none;
     cursor: pointer;
-    min-width: 250px;
-    transition: border-color 0.2s ease;
+    min-width: 220px;
     appearance: none;
     -webkit-appearance: none;
+    height: 40px;
 }
 
 .selector-wrapper::after {
     content: '▼';
-    font-size: 10px;
+    font-size: 8px;
     color: var(--color-primary);
     position: absolute;
-    right: 20px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
 }
 
 #country-selector:hover {
-    border-color: var(--color-primary);
+    opacity: 0.9;
 }
 
 #country-selector:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(32, 32, 32, 0.1);
 }
 
 /* ==========================================================================
@@ -343,8 +345,8 @@ body {
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-margin);
 }
 
 .metric-card {
@@ -352,19 +354,28 @@ body {
     color: var(--color-on-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--rounded-md);
-    padding: 20px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     position: relative;
     overflow: hidden;
-    /* Shadows are generally absent */
     box-shadow: none;
     transition: border-color 0.2s ease;
 }
 
 .metric-card:hover {
     border-color: var(--color-primary);
+}
+
+/* Overriding any old card gradients/colors to maintain monochrome white cards */
+.metric-card.gold,
+.metric-card.danger,
+.metric-card.success,
+.metric-card.primary {
+    background-color: var(--color-surface) !important;
+    color: var(--color-on-surface) !important;
+    border: 1px solid var(--color-border) !important;
 }
 
 .card-top {
@@ -376,41 +387,43 @@ body {
 .card-title {
     font-family: var(--font-sans);
     font-size: 12px;
-    font-weight: 600;
-    color: var(--color-secondary);
+    font-weight: 400;
+    color: var(--color-primary);
+    opacity: 0.6;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
 }
 
 .card-icon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--rounded-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-muted);
+    background-color: var(--color-secondary);
     color: var(--color-primary);
 }
 
 .card-value {
-    font-family: var(--font-serif);
-    font-size: 40px; /* body-lg scale */
-    font-weight: 600;
+    font-family: var(--font-sans);
+    font-size: 27px;
+    font-weight: 700;
     line-height: 1.2;
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .card-trend-box {
     display: flex;
     align-items: center;
     gap: 8px;
+    min-height: 20px;
 }
 
 .card-trend-box .trend {
     font-family: var(--font-sans);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .card-trend-box .trend.positive {
@@ -424,14 +437,15 @@ body {
 .card-trend-box .subtitle {
     font-family: var(--font-sans);
     font-size: 12px;
-    color: var(--color-secondary);
+    color: var(--color-primary);
+    opacity: 0.5;
 }
 
-/* Minimal Flat Progress Bar inside cards */
+/* Flat minimal progress bar inside cards */
 .card-progress-container {
     width: 100%;
     height: 4px;
-    background-color: var(--color-tertiary);
+    background-color: var(--color-secondary);
     border-radius: var(--rounded-full);
     overflow: hidden;
     margin-top: 4px;
@@ -451,25 +465,26 @@ body {
     border-radius: var(--rounded-full);
     font-family: var(--font-sans);
     font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-weight: 400;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
 .card-badge.high {
     background-color: var(--color-primary);
-    color: var(--color-neutral);
+    color: var(--color-tertiary);
 }
 
 .card-badge.mod {
-    background-color: var(--color-muted);
+    background-color: var(--color-tertiary);
     color: var(--color-primary);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-primary);
 }
 
 .card-badge.low {
-    background-color: #FCE8E6;
+    background-color: var(--color-tertiary);
     color: var(--color-error);
+    border: 1px solid var(--color-error);
 }
 
 /* ==========================================================================
@@ -480,26 +495,27 @@ body {
     color: var(--color-on-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--rounded-md);
-    padding: 32px;
-    margin-bottom: var(--space-md);
+    padding: 24px;
+    margin-bottom: var(--space-margin);
     box-shadow: none;
     position: relative;
 }
 
 .glass-card h2 {
-    font-family: var(--font-serif);
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--color-accent);
-    margin-bottom: 8px;
-    letter-spacing: -0.5px;
+    font-family: var(--font-sans);
+    font-size: 23px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
 }
 
 .glass-card .subtitle {
     font-family: var(--font-sans);
     font-size: 14px;
-    color: var(--color-secondary);
-    margin-bottom: 24px;
+    color: var(--color-primary);
+    opacity: 0.6;
+    margin-bottom: 20px;
 }
 
 .chart-header {
@@ -512,14 +528,14 @@ body {
 .canvas-wrapper {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 380px;
 }
 
 /* Custom legend items */
 .chart-legend-custom {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     max-width: 70%;
     justify-content: flex-end;
 }
@@ -527,68 +543,62 @@ body {
 .legend-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-family: var(--font-sans);
     font-size: 12px;
-    font-weight: 500;
-    color: var(--color-secondary);
+    font-weight: 400;
+    color: var(--color-primary);
     cursor: pointer;
-    background-color: var(--color-muted);
+    background-color: var(--color-tertiary);
     border: 1px solid var(--color-border);
-    padding: 6px 14px;
+    padding: 4px 12px;
     border-radius: var(--rounded-full);
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
 }
 
 .legend-item:hover {
-    color: var(--color-accent);
     border-color: var(--color-primary);
 }
 
 .legend-item.selected {
     border-color: var(--color-primary);
     background-color: var(--color-primary);
-    color: var(--color-neutral);
-    font-weight: 600;
+    color: var(--color-tertiary);
 }
 
 .legend-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: var(--rounded-full);
 }
 
 /* ==========================================================================
-   BUTTONS (Sennep Styling)
+   BUTTONS (Flyhyer primary button)
    ========================================================================== */
-/* Primary Button: dark primary fill, rounded xl, generous padding */
 .action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background-color: var(--color-primary);
-    color: var(--color-background); /* Sunny yellow text for high contrast pop! */
+    color: var(--color-tertiary);
     border: none;
     outline: none;
     font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 23px 30px;
-    border-radius: var(--rounded-xl);
-    height: 60px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 8px 16px;
+    border-radius: var(--rounded-sm);
+    height: 40px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.2s ease;
 }
 
 .action-btn:hover {
-    background-color: var(--color-accent);
-    transform: translateY(-1px);
+    opacity: 0.9;
 }
 
 .action-btn:active {
-    transform: translateY(0);
+    opacity: 0.8;
 }
 
 /* ==========================================================================
@@ -612,21 +622,20 @@ body {
 
 .custom-table th {
     background-color: var(--color-surface);
-    color: var(--color-secondary);
+    color: var(--color-primary);
     font-family: var(--font-sans);
-    font-weight: 600;
-    padding: 16px 20px;
-    border-bottom: 2px solid var(--color-primary);
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    font-weight: 700;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-primary);
+    font-size: 12px;
     text-transform: uppercase;
 }
 
 .custom-table td {
-    padding: 16px 20px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--color-border);
     color: var(--color-primary);
-    transition: background-color 0.2s ease;
+    transition: background-color 0.15s ease;
 }
 
 .custom-table tbody tr {
@@ -634,40 +643,42 @@ body {
 }
 
 .custom-table tbody tr:hover td {
-    background-color: var(--color-muted);
+    background-color: #fafafa;
 }
 
-/* Highlight Active Row with cream */
+/* Highlight Active Row with bold font and clean solid background */
 .custom-table tbody tr.active-row td {
-    background-color: var(--color-muted);
-    font-weight: 600;
+    background-color: #f5f5f5;
+    font-weight: 700;
 }
 
 /* Badges inside tables */
 .badge {
-    padding: 4px 10px;
+    padding: 3px 10px;
     border-radius: var(--rounded-full);
     font-family: var(--font-sans);
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.03em;
+    font-weight: 400;
     display: inline-block;
+    text-transform: uppercase;
 }
 
 .badge.success {
-    background-color: var(--color-muted);
+    background-color: var(--color-tertiary);
     color: var(--color-primary);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-primary);
 }
 
 .badge.danger {
-    background-color: #FCE8E6;
+    background-color: var(--color-tertiary);
     color: var(--color-error);
+    border: 1px solid var(--color-error);
 }
 
 .badge.info {
-    background-color: var(--color-muted);
+    background-color: var(--color-tertiary);
     color: var(--color-primary);
+    border: 1px solid var(--color-border);
 }
 
 /* ==========================================================================
@@ -676,7 +687,7 @@ body {
 .timeline-items {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: var(--space-sm);
+    gap: var(--space-lg);
     margin-top: 10px;
 }
 
@@ -684,10 +695,10 @@ body {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--rounded-md);
-    padding: 24px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     transition: border-color 0.2s ease;
 }
 
@@ -695,27 +706,44 @@ body {
     border-color: var(--color-primary);
 }
 
+/* Overriding old dynamic states to keep timeline stark */
+.timeline-item.info,
+.timeline-item.warning,
+.timeline-item.danger,
+.timeline-item.success {
+    background-color: var(--color-surface) !important;
+    border-color: var(--color-border) !important;
+}
+
+.timeline-item.info:hover,
+.timeline-item.warning:hover,
+.timeline-item.danger:hover,
+.timeline-item.success:hover {
+    border-color: var(--color-primary) !important;
+}
+
 .timeline-year {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: 700;
-    font-size: 24px;
-    color: var(--color-accent);
+    font-size: 20px;
+    color: var(--color-primary);
     line-height: 1;
 }
 
 .timeline-desc {
     font-family: var(--font-sans);
     font-size: 13px;
-    color: var(--color-secondary);
-    line-height: 1.6;
+    color: var(--color-primary);
+    opacity: 0.7;
+    line-height: 1.5;
 }
 
 .timeline-desc strong {
     color: var(--color-primary);
     display: block;
-    margin-bottom: 4px;
-    font-size: 14px;
-    font-family: var(--font-sans);
+    margin-bottom: 2px;
+    font-size: 13px;
+    font-weight: 700;
 }
 
 /* ==========================================================================
@@ -724,19 +752,19 @@ body {
 .grid-two-columns {
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
-    gap: var(--space-sm);
+    gap: var(--space-lg);
 }
 
 .explorer-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-lg);
 }
 
 .tab-content {
     display: none;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.2s ease;
 }
 
 .tab-content.active {
@@ -749,24 +777,26 @@ body {
 }
 
 .margin-top {
-    margin-top: var(--space-sm);
+    margin-top: var(--space-lg);
 }
 
 .info-card ul {
-    padding-left: 20px;
-    margin-top: 12px;
+    padding-left: 16px;
+    margin-top: 8px;
 }
 
 .info-card li {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-family: var(--font-sans);
-    font-size: 14px;
-    color: var(--color-secondary);
-    line-height: 1.6;
+    font-size: 13px;
+    color: var(--color-primary);
+    opacity: 0.8;
+    line-height: 1.5;
 }
 
 .info-card li strong {
     color: var(--color-primary);
+    font-weight: 700;
 }
 
 /* ==========================================================================
@@ -780,26 +810,31 @@ body {
 
 @media (max-width: 1024px) {
     body {
-        padding-bottom: var(--space-md);
+        padding-bottom: var(--space-lg);
     }
 }
 
 @media (max-width: 768px) {
     .header-inner {
         flex-direction: column;
-        gap: 16px;
+        gap: 12px;
         align-items: flex-start;
+        padding: 0 var(--space-lg);
+    }
+
+    .app-container {
+        padding: 0 var(--space-lg);
     }
     
     .nav-menu {
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 10px;
     }
     
     .top-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 20px;
+        gap: 16px;
     }
     
     .selector-wrapper, #country-selector {
@@ -811,11 +846,11 @@ body {
     }
     
     .headline-display {
-        font-size: 46px;
-        line-height: 56px;
+        font-size: 27px;
+        line-height: 32px;
     }
     
     .header-title h1 {
-        font-size: 36px;
+        font-size: 27px;
     }
 }

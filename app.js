@@ -3,19 +3,19 @@ let countriesData = [];
 let selectedCountry = 'ASEAN';
 let charts = {};
 
-// Palette Colors matching Sennep Editorial Warmth
+// Palette Colors matching Flyhyer Minimal
 const COLORS = {
-    primary: '#202020',
-    secondary: '#303136',
-    tertiary: '#E5E7EB',
-    neutral: '#FFFFFF',
-    surface: '#FFFFFF',
-    background: '#F4C84A',
-    onSurface: '#202020',
-    border: '#E5E7EB',
-    muted: '#F7F1DB',
+    primary: '#000000',
+    secondary: '#e5e7eb',
+    tertiary: '#ffffff',
+    neutral: '#ffffff',
+    surface: '#ffffff',
+    background: '#ffffff',
+    onSurface: '#000000',
+    border: '#e5e7eb',
+    muted: '#ffffff',
     accent: '#000000',
-    error: '#C84C4C'
+    error: '#d92d20'
 };
 
 // Initialize Application
@@ -187,9 +187,9 @@ function initCharts() {
     const ctxScatter = document.getElementById('resilienceScatterChart').getContext('2d');
     const ctxForecast = document.getElementById('forecastChart').getContext('2d');
 
-    // Chart.js global overrides for Sennep Editorial Warmth
-    Chart.defaults.color = COLORS.secondary;
-    Chart.defaults.font.family = "'Lato', -apple-system, sans-serif";
+    // Chart.js global overrides for Flyhyer Minimal
+    Chart.defaults.color = '#000000';
+    Chart.defaults.font.family = '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif';
     Chart.defaults.font.size = 11;
     Chart.defaults.borderColor = COLORS.border;
 
@@ -209,28 +209,28 @@ function initCharts() {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#ffffff',
-                    titleColor: '#202020',
-                    bodyColor: '#303136',
-                    borderColor: '#E5E7EB',
+                    titleColor: '#000000',
+                    bodyColor: '#000000',
+                    borderColor: '#e5e7eb',
                     borderWidth: 1,
                     padding: 12,
                     boxPadding: 6,
-                    cornerRadius: 6,
-                    titleFont: { family: 'Lato', weight: 'bold' },
-                    bodyFont: { family: 'Lato' }
+                    cornerRadius: 4,
+                    titleFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif', weight: 'bold' },
+                    bodyFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' }
                 }
             },
             scales: {
                 y: {
                     grid: { color: COLORS.border },
                     ticks: {
-                        color: COLORS.secondary,
+                        color: '#000000',
                         callback: function(value) {
                             return formatNumber(value);
                         }
                     }
                 },
-                x: { grid: { display: false }, ticks: { color: COLORS.secondary } }
+                x: { grid: { display: false }, ticks: { color: '#000000' } }
             }
         },
         plugins: [{
@@ -243,13 +243,13 @@ function initCharts() {
                 const startX = xAxis.getPixelForValue('2020');
                 const endX = xAxis.getPixelForValue('2022');
                 
-                // Draw translucent block for lockdowns
-                ctx.fillStyle = 'rgba(200, 76, 76, 0.04)';
+                // Draw subtle translucent gray block for lockdowns
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
                 ctx.fillRect(startX, yAxis.top, endX - startX, yAxis.bottom - yAxis.top);
                 
                 // Dotted vertical limiters
-                ctx.strokeStyle = 'rgba(200, 76, 76, 0.3)';
-                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+                ctx.lineWidth = 1;
                 ctx.setLineDash([4, 4]);
                 
                 ctx.beginPath();
@@ -261,8 +261,8 @@ function initCharts() {
                 ctx.setLineDash([]);
                 
                 // Draw Zone Title
-                ctx.fillStyle = 'rgba(200, 76, 76, 0.8)';
-                ctx.font = "600 10px 'Lato', sans-serif";
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.font = "600 10px 'HelveticaNowDisplay', 'Helvetica Neue', Helvetica, Arial, sans-serif";
                 ctx.fillText('PERIODE KRISIS PANDEMI', startX + 15, yAxis.top + 20);
             }
         }]
@@ -280,9 +280,9 @@ function initCharts() {
             datasets: [{
                 label: 'Skor Ketangguhan',
                 data: sortedResilience.map(d => d.metrics.resilience_score),
-                backgroundColor: sortedResilience.map(d => d.country === selectedCountry ? COLORS.accent : COLORS.border),
-                borderColor: sortedResilience.map(d => d.country === selectedCountry ? COLORS.primary : 'transparent'),
-                borderWidth: sortedResilience.map(d => d.country === selectedCountry ? 1 : 0),
+                backgroundColor: sortedResilience.map(d => d.country === selectedCountry ? '#000000' : '#e5e7eb'),
+                borderColor: 'transparent',
+                borderWidth: 0,
                 borderRadius: 4,
                 barThickness: 20
             }]
@@ -294,11 +294,11 @@ function initCharts() {
             scales: {
                 y: { 
                     grid: { color: COLORS.border },
-                    ticks: { color: COLORS.secondary }
+                    ticks: { color: '#000000' }
                 },
                 x: { 
                     grid: { display: false },
-                    ticks: { color: COLORS.secondary }
+                    ticks: { color: '#000000' }
                 }
             }
         }
@@ -317,14 +317,14 @@ function initCharts() {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#ffffff',
-                    titleColor: '#202020',
-                    bodyColor: '#303136',
-                    borderColor: '#E5E7EB',
+                    titleColor: '#000000',
+                    bodyColor: '#000000',
+                    borderColor: '#e5e7eb',
                     borderWidth: 1,
                     padding: 12,
-                    cornerRadius: 6,
-                    titleFont: { family: 'Lato', weight: 'bold' },
-                    bodyFont: { family: 'Lato' },
+                    cornerRadius: 4,
+                    titleFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif', weight: 'bold' },
+                    bodyFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' },
                     callbacks: {
                         label: function(context) {
                             const raw = context.raw;
@@ -335,18 +335,18 @@ function initCharts() {
             },
             scales: {
                 x: {
-                    title: { display: true, text: 'Keparahan Penurunan (Drop Severity %)', color: COLORS.secondary, font: { weight: 'bold', family: 'Lato' } },
+                    title: { display: true, text: 'Keparahan Penurunan (Drop Severity %)', color: '#000000', font: { weight: 'bold', family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' } },
                     grid: { color: COLORS.border },
                     ticks: {
-                        color: COLORS.secondary,
+                        color: '#000000',
                         callback: function(val) { return val + '%'; }
                     }
                 },
                 y: {
-                    title: { display: true, text: 'Tingkat Pemulihan (Recovery Rate %)', color: COLORS.secondary, font: { weight: 'bold', family: 'Lato' } },
+                    title: { display: true, text: 'Tingkat Pemulihan (Recovery Rate %)', color: '#000000', font: { weight: 'bold', family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' } },
                     grid: { color: COLORS.border },
                     ticks: {
-                        color: COLORS.secondary,
+                        color: '#000000',
                         callback: function(val) { return val + '%'; }
                     }
                 }
@@ -365,31 +365,31 @@ function initCharts() {
                 {
                     label: 'Historis Aktual',
                     data: forecastData.history,
-                    borderColor: COLORS.accent,
+                    borderColor: '#000000',
                     backgroundColor: 'transparent',
-                    borderWidth: 3,
+                    borderWidth: 2,
                     fill: false,
-                    tension: 0.15,
+                    tension: 0,
                     pointRadius: 4,
-                    pointBackgroundColor: COLORS.accent,
+                    pointBackgroundColor: '#000000',
                     pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
+                    pointBorderWidth: 1.5,
                     pointHoverRadius: 6
                 },
                 {
                     label: 'Proyeksi Tren',
                     data: forecastData.forecast,
-                    borderColor: COLORS.primary,
+                    borderColor: '#000000',
                     backgroundColor: 'transparent',
-                    borderWidth: 2,
-                    borderDash: [6, 6],
+                    borderWidth: 1.5,
+                    borderDash: [4, 4],
                     fill: false,
                     tension: 0,
                     pointStyle: 'circle',
-                    pointRadius: 6,
+                    pointRadius: 4,
                     pointBackgroundColor: '#ffffff',
-                    pointBorderColor: COLORS.primary,
-                    pointBorderWidth: 2
+                    pointBorderColor: '#000000',
+                    pointBorderWidth: 1.5
                 }
             ]
         },
@@ -400,14 +400,14 @@ function initCharts() {
             plugins: {
                 tooltip: {
                     backgroundColor: '#ffffff',
-                    titleColor: '#202020',
-                    bodyColor: '#303136',
-                    borderColor: '#E5E7EB',
+                    titleColor: '#000000',
+                    bodyColor: '#000000',
+                    borderColor: '#e5e7eb',
                     borderWidth: 1,
                     padding: 12,
-                    cornerRadius: 6,
-                    titleFont: { family: 'Lato', weight: 'bold' },
-                    bodyFont: { family: 'Lato' },
+                    cornerRadius: 4,
+                    titleFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif', weight: 'bold' },
+                    bodyFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' },
                     callbacks: {
                         label: function(context) {
                             return ` ${context.dataset.label}: ${formatNumber(context.raw)}`;
@@ -419,13 +419,13 @@ function initCharts() {
                 y: {
                     grid: { color: COLORS.border },
                     ticks: {
-                        color: COLORS.secondary,
+                        color: '#000000',
                         callback: function(value) {
                             return formatNumber(value);
                         }
                     }
                 },
-                x: { grid: { display: false }, ticks: { color: COLORS.secondary } }
+                x: { grid: { display: false }, ticks: { color: '#000000' } }
             }
         }
     });
@@ -437,28 +437,23 @@ function getOverviewDatasets() {
         const isSelected = item.country === selectedCountry;
         const dataArr = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'].map(yr => item.history[yr]);
         
-        let color = 'rgba(48, 49, 54, 0.15)'; // Grey for non-selected
-        let fillGradient = false;
-
+        let color = 'rgba(0, 0, 0, 0.15)'; // Stark gray for non-selected
         if (isSelected) {
-            // Stark black accent for selected
-            color = COLORS.accent;
-            fillGradient = 'rgba(247, 241, 219, 0.4)'; // soft cream tint
+            color = '#000000'; // Stark black for selected
         }
         
         return {
             label: item.country,
             data: dataArr,
             borderColor: color,
-            borderWidth: isSelected ? 4 : 1.5,
-            pointBackgroundColor: isSelected ? COLORS.accent : 'transparent',
+            borderWidth: isSelected ? 3 : 1,
+            pointBackgroundColor: isSelected ? '#000000' : 'transparent',
             pointBorderColor: isSelected ? '#ffffff' : 'transparent',
-            pointBorderWidth: isSelected ? 2 : 0,
-            pointRadius: isSelected ? 5 : 0,
-            pointHoverRadius: isSelected ? 7 : 4,
-            tension: 0.18,
-            fill: isSelected,
-            backgroundColor: fillGradient
+            pointBorderWidth: isSelected ? 1.5 : 0,
+            pointRadius: isSelected ? 4 : 0,
+            pointHoverRadius: isSelected ? 6 : 3,
+            tension: 0, // Stark straight lines for Flyhyer look
+            fill: false
         };
     });
 }
@@ -475,9 +470,9 @@ function renderCustomLegend() {
         const legendItem = document.createElement('div');
         legendItem.className = `legend-item ${isSelected ? 'selected' : ''}`;
         
-        let dotColor = 'rgba(48, 49, 54, 0.3)';
+        let dotColor = '#e5e7eb';
         if (isSelected) {
-            dotColor = COLORS.accent;
+            dotColor = '#000000';
         }
         
         legendItem.innerHTML = `
@@ -506,7 +501,7 @@ function getScatterDatasets() {
             return {
                 x: d.metrics.drop_severity_pct,
                 y: d.metrics.recovery_rate_2025_pct,
-                r: isSelected ? 12 : 7,
+                r: isSelected ? 10 : 6,
                 label: d.country,
                 isSelected: isSelected
             };
@@ -514,10 +509,10 @@ function getScatterDatasets() {
 
     return [{
         data: dataPoints,
-        backgroundColor: dataPoints.map(p => p.isSelected ? COLORS.accent : COLORS.muted),
-        borderColor: dataPoints.map(p => p.isSelected ? '#ffffff' : COLORS.primary),
-        borderWidth: 2.0,
-        hoverBackgroundColor: COLORS.accent
+        backgroundColor: dataPoints.map(p => p.isSelected ? '#000000' : 'transparent'),
+        borderColor: dataPoints.map(p => '#000000'),
+        borderWidth: 1.5,
+        hoverBackgroundColor: '#000000'
     }];
 }
 
