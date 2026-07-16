@@ -189,9 +189,9 @@ function initCharts() {
 
     // Chart.js global overrides for Flyhyer Minimal
     Chart.defaults.color = '#000000';
-    Chart.defaults.font.family = '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif';
-    Chart.defaults.font.size = 11;
-    Chart.defaults.borderColor = COLORS.border;
+    Chart.defaults.font.family = '"Inter", -apple-system, sans-serif';
+    Chart.defaults.font.size = 10;
+    Chart.defaults.borderColor = 'rgba(0, 0, 0, 0.05)';
 
     // 1. Overview Chart (Line Chart)
     const datasetsOverview = getOverviewDatasets();
@@ -211,26 +211,33 @@ function initCharts() {
                     backgroundColor: '#ffffff',
                     titleColor: '#000000',
                     bodyColor: '#000000',
-                    borderColor: '#e5e7eb',
+                    borderColor: '#000000',
                     borderWidth: 1,
                     padding: 12,
                     boxPadding: 6,
-                    cornerRadius: 4,
-                    titleFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif', weight: 'bold' },
-                    bodyFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' }
+                    cornerRadius: 0,
+                    titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
+                    bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 }
                 }
             },
             scales: {
                 y: {
-                    grid: { color: COLORS.border },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
                     ticks: {
                         color: '#000000',
+                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(value) {
                             return formatNumber(value);
                         }
                     }
                 },
-                x: { grid: { display: false }, ticks: { color: '#000000' } }
+                x: { 
+                    grid: { display: false }, 
+                    ticks: { 
+                        color: '#000000',
+                        font: { family: '"Inter", -apple-system, sans-serif' }
+                    } 
+                }
             }
         },
         plugins: [{
@@ -244,13 +251,13 @@ function initCharts() {
                 const endX = xAxis.getPixelForValue('2022');
                 
                 // Draw subtle translucent gray block for lockdowns
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.01)';
                 ctx.fillRect(startX, yAxis.top, endX - startX, yAxis.bottom - yAxis.top);
                 
                 // Dotted vertical limiters
-                ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
                 ctx.lineWidth = 1;
-                ctx.setLineDash([4, 4]);
+                ctx.setLineDash([3, 3]);
                 
                 ctx.beginPath();
                 ctx.moveTo(startX, yAxis.top);
@@ -261,8 +268,8 @@ function initCharts() {
                 ctx.setLineDash([]);
                 
                 // Draw Zone Title
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                ctx.font = "600 10px 'HelveticaNowDisplay', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+                ctx.font = "700 9px 'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif";
                 ctx.fillText('PERIODE KRISIS PANDEMI', startX + 15, yAxis.top + 20);
             }
         }]
@@ -319,12 +326,12 @@ function initCharts() {
                     backgroundColor: '#ffffff',
                     titleColor: '#000000',
                     bodyColor: '#000000',
-                    borderColor: '#e5e7eb',
+                    borderColor: '#000000',
                     borderWidth: 1,
                     padding: 12,
-                    cornerRadius: 4,
-                    titleFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif', weight: 'bold' },
-                    bodyFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' },
+                    cornerRadius: 0,
+                    titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
+                    bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 },
                     callbacks: {
                         label: function(context) {
                             const raw = context.raw;
@@ -335,18 +342,20 @@ function initCharts() {
             },
             scales: {
                 x: {
-                    title: { display: true, text: 'Keparahan Penurunan (Drop Severity %)', color: '#000000', font: { weight: 'bold', family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' } },
-                    grid: { color: COLORS.border },
+                    title: { display: true, text: 'Keparahan Penurunan (Drop Severity %)', color: '#000000', font: { weight: 'bold', family: '"Inter", -apple-system, sans-serif' } },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
                     ticks: {
                         color: '#000000',
+                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(val) { return val + '%'; }
                     }
                 },
                 y: {
-                    title: { display: true, text: 'Tingkat Pemulihan (Recovery Rate %)', color: '#000000', font: { weight: 'bold', family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' } },
-                    grid: { color: COLORS.border },
+                    title: { display: true, text: 'Tingkat Pemulihan (Recovery Rate %)', color: '#000000', font: { weight: 'bold', family: '"Inter", -apple-system, sans-serif' } },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
                     ticks: {
                         color: '#000000',
+                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(val) { return val + '%'; }
                     }
                 }
@@ -402,12 +411,12 @@ function initCharts() {
                     backgroundColor: '#ffffff',
                     titleColor: '#000000',
                     bodyColor: '#000000',
-                    borderColor: '#e5e7eb',
+                    borderColor: '#000000',
                     borderWidth: 1,
                     padding: 12,
-                    cornerRadius: 4,
-                    titleFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif', weight: 'bold' },
-                    bodyFont: { family: '"HelveticaNowDisplay", "Helvetica Neue", Helvetica, Arial, sans-serif' },
+                    cornerRadius: 0,
+                    titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
+                    bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 },
                     callbacks: {
                         label: function(context) {
                             return ` ${context.dataset.label}: ${formatNumber(context.raw)}`;
@@ -417,15 +426,22 @@ function initCharts() {
             },
             scales: {
                 y: {
-                    grid: { color: COLORS.border },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
                     ticks: {
                         color: '#000000',
+                        font: { family: '"Inter", -apple-system, sans-serif' },
                         callback: function(value) {
                             return formatNumber(value);
                         }
                     }
                 },
-                x: { grid: { display: false }, ticks: { color: '#000000' } }
+                x: { 
+                    grid: { display: false }, 
+                    ticks: { 
+                        color: '#000000',
+                        font: { family: '"Inter", -apple-system, sans-serif' }
+                    } 
+                }
             }
         }
     });
