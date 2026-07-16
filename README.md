@@ -83,6 +83,12 @@ Modeled using OLS linear regression of the recovery years (2021-2025), the total
 
 ---
 
+### 🌐 Live Demo
+The interactive dashboard is hosted live on GitHub Pages:
+👉 [https://izamrosiawan.github.io/asean-economic-recovery/](https://izamrosiawan.github.io/asean-economic-recovery/)
+
+---
+
 ### 🔄 Reproducibility
 * **Environment**: Python 3.11.x and Node.js (for running the dashboard UI).
 * **Execution Sequence**:
@@ -171,6 +177,12 @@ Menggunakan model Regresi Linear OLS, total kunjungan ke kawasan ASEAN diproyeks
 
 ---
 
+### 🌐 Demo Live
+Dashboard interaktif dihosting secara live di GitHub Pages:
+👉 [https://izamrosiawan.github.io/asean-economic-recovery/](https://izamrosiawan.github.io/asean-economic-recovery/)
+
+---
+
 ### 🔄 Reproduksibilitas
 * **Lingkungan**: Python 3.11.x dan Node.js (untuk dashboard).
 * **Urutan Eksekusi**:
@@ -182,6 +194,6 @@ Menggunakan model Regresi Linear OLS, total kunjungan ke kawasan ASEAN diproyeks
 
 ## ⚙️ Teknologi yang Digunakan
 * **Python 3.11** (Pandas, NumPy, Scikit-learn, Statsmodels)
-* **HTML5 / CSS3 / JavaScript** (Dashboard interaktif dengan tema Sennep Editorial Warmth)
+* **HTML5 / CSS3 / JavaScript** (Dashboard interaktif dengan tema Flyhyer Minimal)
 * **Jupyter Notebook** (Untuk data processing pipeline)
 * **Git** (Version control)
