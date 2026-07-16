@@ -14,48 +14,76 @@
 </head>
 <body>
     <!-- Header Navigation -->
-    <header class="app-header">
-        <div class="header-inner">
-            <div class="brand">
-                <svg class="brand-icon" viewBox="0 0 24 24" width="24" height="24">
-                    <path d="M12 2L2 22h20L12 2zm0 3.99L18.8 19H5.2L12 5.99zM11 16h2v2h-2zm0-6h2v4h-2z" fill="currentColor"/>
-                </svg>
-                <h2>ASEAN Analytics</h2>
-            </div>
-            <nav class="nav-menu">
-                <button class="nav-btn active" id="btn-overview" onclick="switchTab('overview')">Ringkasan Tren</button>
-                <button class="nav-btn" id="btn-resilience" onclick="switchTab('resilience')">Indeks Ketangguhan</button>
-                <button class="nav-btn" id="btn-forecasting" onclick="switchTab('forecasting')">Peramalan 2027</button>
-                <button class="nav-btn" id="btn-explorer" onclick="switchTab('explorer')">Eksplorasi Data</button>
-            </nav>
-            <div class="header-aside">
-                <a href="tourism_recovery_analysis.ipynb" class="footer-link" target="_blank" download>
-                    <svg viewBox="0 0 24 24" width="12" height="12" style="margin-right: 4px; vertical-align: middle;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z" fill="currentColor"/></svg>
-                    Notebook Analisis
-                </a>
-                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Ubah Tema">
-                    <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </header>
+    <!-- Top Status Bar -->
+    <div class="top-status-bar">
+        <div><span class="status-dot"></span>LIVE NETWORK: ACTIVE</div>
+        <div>WORKSPACE: ASEAN_TOURISM // SP_HUB_ACTIVE</div>
+        <div id="status-date">DATE: 16-JUL-2026 // UTC+07:00</div>
+    </div>
 
-    <div class="app-container">
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <header class="top-header">
-                <div class="header-title">
-                    <h1>ASEAN Tourism Recovery Tracker</h1>
-                    <p>Analisis Interaktif Pemulihan Dampak Pandemi & Model Proyeksi Regional</p>
+    <!-- App Wrapper (Sidebar + Main Content) -->
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand">
+                <h1>ASEAN</h1>
+                <p>Tourism Tracker v1.0</p>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <button class="sidebar-btn nav-btn active" id="btn-overview" onclick="switchTab('overview')">
+                    <span class="btn-indicator"></span>Overview
+                </button>
+                <button class="sidebar-btn nav-btn" id="btn-resilience" onclick="switchTab('resilience')">
+                    <span class="btn-indicator"></span>Resilience
+                </button>
+                <button class="sidebar-btn nav-btn" id="btn-forecasting" onclick="switchTab('forecasting')">
+                    <span class="btn-indicator"></span>Forecast 2027
+                </button>
+                <button class="sidebar-btn nav-btn" id="btn-explorer" onclick="switchTab('explorer')">
+                    <span class="btn-indicator"></span>Data Explorer
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="footer-meta">
+                    <div>WORKSPACE: ASEAN_PACIFIC</div>
+                    <div>STATUS: STABLE // ONLINE</div>
+                    <div>DATA PERIOD: 2019 - 2027</div>
                 </div>
-                <div class="selector-wrapper">
-                    <select id="country-selector" onchange="handleCountryChange()">
-                        <!-- Options filled dynamically -->
-                    </select>
+                <div class="sidebar-actions">
+                    <a href="tourism_recovery_analysis.ipynb" class="action-link" target="_blank" download>
+                        Notebook (.IPYNB)
+                    </a>
+                    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Ubah Tema">
+                        <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                        </svg>
+                    </button>
                 </div>
-            </header>
+            </div>
+        </aside>
+
+        <!-- Main Container -->
+        <div class="app-container">
+            <main class="main-content">
+                <header class="content-header">
+                    <div class="header-meta">MANIFEST ID: AS-2818-09</div>
+                    <div class="header-main">
+                        <div class="header-main-title">
+                            <h1>EXECUTIVE PERFORMANCE OVERVIEW</h1>
+                            <p>Analisis Interaktif Pemulihan Dampak Pandemi & Model Proyeksi Regional</p>
+                        </div>
+                        <div class="header-aside">
+                            <div class="refresh-time" id="refresh-time">LATEST REFRESH: 16-JUL-2026</div>
+                            <div class="selector-wrapper">
+                                <select id="country-selector" onchange="handleCountryChange()">
+                                    <!-- Options filled dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </header>
 
             <!-- Metrics KPI Cards -->
             <section class="metrics-grid">
@@ -308,6 +336,7 @@
             </section>
         </main>
     </div>
+    </div> <!-- Close app-wrapper -->
 
     <!-- Script Application -->
     <script src="app.js?v=2"></script>

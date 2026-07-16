@@ -80,16 +80,16 @@ function updateChartThemeColors() {
 function getTooltipConfig() {
     const isDark = currentTheme === 'dark';
     return {
-        backgroundColor: isDark ? '#151f32' : '#ffffff',
-        titleColor: isDark ? '#f8fafc' : '#0f172a',
-        bodyColor: isDark ? '#cbd5e1' : '#475569',
-        borderColor: isDark ? '#334155' : '#e2e8f0',
+        backgroundColor: isDark ? '#1c1c1e' : '#ffffff',
+        titleColor: isDark ? '#f5f5f7' : '#1d1d1f',
+        bodyColor: isDark ? '#8e8e93' : '#86868b',
+        borderColor: isDark ? '#2c2c2e' : '#e5e7eb',
         borderWidth: 1,
         padding: 12,
         boxPadding: 6,
-        cornerRadius: 8,
-        titleFont: { family: '"Inter", -apple-system, sans-serif', weight: 'bold', size: 12 },
-        bodyFont: { family: '"Inter", -apple-system, sans-serif', size: 11 }
+        cornerRadius: 4,
+        titleFont: { family: '"SF Pro Text", -apple-system, sans-serif', weight: 'bold', size: 12 },
+        bodyFont: { family: '"SF Pro Text", -apple-system, sans-serif', size: 11 }
     };
 }
 
