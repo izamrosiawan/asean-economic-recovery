@@ -592,23 +592,34 @@ function renderCustomLegend() {
 // Scatter Plot Datasets
 function getScatterDatasets() {
     const isDark = currentTheme === 'dark';
+    const isASEAN = selectedCountry === 'ASEAN';
     const dataPoints = countriesData
         .filter(d => d.country !== 'ASEAN')
         .map(d => {
             const isSelected = d.country === selectedCountry;
+            let bg, bc;
+            if (isASEAN) {
+                bg = isDark ? 'rgba(10, 132, 255, 0.45)' : 'rgba(0, 113, 227, 0.45)';
+                bc = isDark ? '#0a84ff' : '#0071e3';
+            } else {
+                bg = isSelected ? COLORS.accent : (isDark ? '#3a3a3c' : '#e5e5ea');
+                bc = isSelected ? (isDark ? '#ffffff' : COLORS.accent) : (isDark ? '#48484a' : '#d1d1d6');
+            }
             return {
                 x: d.metrics.drop_severity_pct,
                 y: d.metrics.recovery_rate_2025_pct,
                 r: isSelected ? 12 : 6.5,
                 label: d.country,
-                isSelected: isSelected
+                isSelected: isSelected,
+                backgroundColor: bg,
+                borderColor: bc
             };
         });
 
     return [{
         data: dataPoints,
-        backgroundColor: dataPoints.map(p => p.isSelected ? COLORS.accent : (isDark ? '#2c2c2e' : '#f5f5f7')),
-        borderColor: dataPoints.map(p => p.isSelected ? (isDark ? '#ffffff' : COLORS.accent) : (isDark ? '#3a3a3c' : '#d1d1d6')),
+        backgroundColor: dataPoints.map(p => p.backgroundColor),
+        borderColor: dataPoints.map(p => p.borderColor),
         borderWidth: dataPoints.map(p => p.isSelected ? 2 : 1),
         hoverBackgroundColor: COLORS.accent
     }];
@@ -647,6 +658,7 @@ function updateCharts() {
 
     const ctxOverview = document.getElementById('overviewChart').getContext('2d');
     const isDark = currentTheme === 'dark';
+    const isASEAN = selectedCountry === 'ASEAN';
 
     // 1. Overview
     charts.overview.data.datasets = getOverviewDatasets(ctxOverview);
@@ -655,7 +667,12 @@ function updateCharts() {
 
     // 2. Resilience Bar Chart
     const sortedResilience = [...countriesData].filter(d => d.country !== 'ASEAN').sort((a,b) => b.metrics.resilience_score - a.metrics.resilience_score);
-    charts.resilience.data.datasets[0].backgroundColor = sortedResilience.map(d => d.country === selectedCountry ? COLORS.accent : (isDark ? '#2c2c2e' : '#f5f5f7'));
+    charts.resilience.data.datasets[0].backgroundColor = sortedResilience.map(d => {
+        if (isASEAN) {
+            return isDark ? 'rgba(10, 132, 255, 0.5)' : 'rgba(0, 113, 227, 0.5)';
+        }
+        return d.country === selectedCountry ? COLORS.accent : (isDark ? '#3a3a3c' : '#e5e5ea');
+    });
     charts.resilience.data.datasets[0].borderColor = 'transparent';
     charts.resilience.data.datasets[0].borderWidth = 0;
     charts.resilience.data.datasets[0].borderRadius = 4; // Apple Minimal card corner radius
