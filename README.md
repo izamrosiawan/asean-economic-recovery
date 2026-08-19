@@ -1,4 +1,4 @@
-# ASEAN Post-Pandemic Economic Recovery Analytics & Tourism Forecasting
+﻿# ASEAN Post-Pandemic Economic Recovery Analytics & Tourism Forecasting
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Pandas](https://img.shields.io/badge/Pandas-Analytics-orange.svg)](https://pandas.pydata.org/)
@@ -9,7 +9,7 @@ Repositori ini menyajikan analisis komparatif pemulihan ekonomi makro dan sektor
 
 ---
 
-## 📂 Struktur Proyek
+## Struktur Proyek
 
 ```
 ├── .gitignore          # Konfigurasi pengabaian cache Git
@@ -24,7 +24,7 @@ Repositori ini menyajikan analisis komparatif pemulihan ekonomi makro dan sektor
 
 ---
 
-## 💻 Implementasi Modular & Pengujian Otomatis
+## Implementasi Modular & Pengujian Otomatis
 
 Modul analitik makroekonomi tersedia di `src/asean_engine.py`:
 
@@ -43,7 +43,7 @@ pytest tests/
 
 ---
 
-## 🚀 Cara Menjalankan
+## Cara Menjalankan
 
 1. **Pasang Dependensi**:
    ```bash
@@ -57,3 +57,4 @@ pytest tests/
 
 ---
 *ASEAN Economic Recovery Project.*
+
