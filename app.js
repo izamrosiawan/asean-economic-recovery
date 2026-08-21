@@ -167,18 +167,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function getThemeColors() {
+  function getSeabornTheme() {
     const isDark = currentTheme === 'dark';
     return {
-      textColor: isDark ? '#94a3b8' : '#71717a',
-      titleColor: isDark ? '#f8fafc' : '#18181b',
-      gridColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+      textColor: isDark ? '#94a3b8' : '#333333',
+      titleColor: isDark ? '#f8fafc' : '#111111',
+      gridColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
       tooltipBg: isDark ? '#101726' : '#ffffff',
-      tooltipBorder: isDark ? '#1e293b' : '#e4e4e7',
-      primaryBlue: isDark ? '#38bdf8' : '#2563eb',
-      emerald: isDark ? '#10b981' : '#059669',
-      amber: isDark ? '#fbbf24' : '#d97706',
-      red: isDark ? '#f87171' : '#dc2626'
+      tooltipBorder: isDark ? '#1e293b' : '#d4d4d8',
+      // Seaborn Notebook Palette Matches
+      historicalBlue: '#1f77b4',
+      forecastOrange: '#ff7f0e',
+      viridisPalette: [
+        '#440154', '#472a7a', '#3b528b', '#2c728e', '#21918c',
+        '#28ae80', '#5ec962', '#addc30', '#fde725', '#fde725'
+      ]
     };
   }
 
@@ -212,40 +215,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('timeSeriesChart');
     if (!canvas) return;
 
-    const tc = getThemeColors();
+    const st = getSeabornTheme();
     const cData = aseanDataset[activeCountry];
     const years = ['2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026 (F)', '2027 (F)'];
 
     const historicalData = [...cData.history, null, null];
     const forecastData = [null, null, null, null, null, null, cData.history[6], ...cData.forecast];
 
+    // Replicating notebook Seaborn line plot: linewidth 3, marker o, dashed orange forecast
     charts.timeSeries = new Chart(canvas.getContext('2d'), {
       type: 'line',
       data: {
         labels: years,
         datasets: [
           {
-            label: 'Data Historis (Juta Wisatawan)',
+            label: 'Data Historis (2019-2025)',
             data: historicalData,
-            borderColor: tc.primaryBlue,
-            backgroundColor: 'rgba(37, 99, 235, 0.05)',
-            borderWidth: 2.5,
+            borderColor: st.historicalBlue,
+            backgroundColor: 'rgba(31, 119, 180, 0.05)',
+            borderWidth: 3,
             fill: true,
-            tension: 0.15,
+            tension: 0.1,
             pointRadius: 4,
-            pointHoverRadius: 6
+            pointBackgroundColor: st.historicalBlue,
+            pointHoverRadius: 7
           },
           {
             label: 'Proyeksi Model (2026-2027)',
             data: forecastData,
-            borderColor: tc.emerald,
-            backgroundColor: 'rgba(5, 150, 105, 0.04)',
-            borderWidth: 2.5,
+            borderColor: st.forecastOrange,
+            backgroundColor: 'rgba(255, 127, 14, 0.04)',
+            borderWidth: 3,
             borderDash: [6, 6],
             fill: true,
-            tension: 0.15,
+            tension: 0.1,
             pointRadius: 4,
-            pointHoverRadius: 6
+            pointBackgroundColor: st.forecastOrange,
+            pointHoverRadius: 7
           }
         ]
       },
@@ -257,17 +263,17 @@ document.addEventListener('DOMContentLoaded', () => {
           legend: {
             position: 'top',
             labels: {
-              color: tc.titleColor,
-              font: { family: 'Plus Jakarta Sans', size: 11 },
+              color: st.titleColor,
+              font: { family: 'Plus Jakarta Sans', size: 11, weight: '500' },
               boxWidth: 10,
               boxHeight: 10
             }
           },
           tooltip: {
-            backgroundColor: tc.tooltipBg,
-            titleColor: tc.titleColor,
-            bodyColor: tc.textColor,
-            borderColor: tc.tooltipBorder,
+            backgroundColor: st.tooltipBg,
+            titleColor: st.titleColor,
+            bodyColor: st.textColor,
+            borderColor: st.tooltipBorder,
             borderWidth: 1,
             titleFont: { family: 'JetBrains Mono', size: 12 },
             bodyFont: { family: 'JetBrains Mono', size: 11 },
@@ -278,12 +284,12 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         scales: {
           x: {
-            grid: { display: false },
-            ticks: { color: tc.textColor, font: { family: 'JetBrains Mono', size: 10 } }
+            grid: { display: true, color: st.gridColor, borderDash: [3, 3] },
+            ticks: { color: st.textColor, font: { family: 'JetBrains Mono', size: 10 } }
           },
           y: {
-            grid: { color: tc.gridColor },
-            ticks: { color: tc.textColor, font: { family: 'JetBrains Mono', size: 10 }, callback: (v) => `${v}M` }
+            grid: { display: true, color: st.gridColor, borderDash: [3, 3] },
+            ticks: { color: st.textColor, font: { family: 'JetBrains Mono', size: 10 }, callback: (v) => `${v}M` }
           }
         },
         onHover: (event, elements, chart) => {
@@ -315,16 +321,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('resilienceChart');
     if (!canvas) return;
 
-    const tc = getThemeColors();
+    const st = getSeabornTheme();
     const labels = resilienceRanking.map(r => r.country);
     const scores = resilienceRanking.map(r => r.score);
 
-    const colors = scores.map(s => {
-      if (s >= 100) return tc.emerald;
-      if (s >= 70) return tc.amber;
-      return tc.red;
-    });
-
+    // Matching notebook seaborn.color_palette("viridis", len(df_ranking))
     charts.resilience = new Chart(canvas.getContext('2d'), {
       type: 'bar',
       data: {
@@ -332,8 +333,10 @@ document.addEventListener('DOMContentLoaded', () => {
         datasets: [{
           label: 'Skor Resiliensi Komposit',
           data: scores,
-          backgroundColor: colors,
-          borderRadius: 6
+          backgroundColor: st.viridisPalette,
+          borderRadius: 4,
+          borderWidth: 0.5,
+          borderColor: 'rgba(0,0,0,0.1)'
         }]
       },
       options: {
@@ -344,10 +347,10 @@ document.addEventListener('DOMContentLoaded', () => {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: tc.tooltipBg,
-            titleColor: tc.titleColor,
-            bodyColor: tc.textColor,
-            borderColor: tc.tooltipBorder,
+            backgroundColor: st.tooltipBg,
+            titleColor: st.titleColor,
+            bodyColor: st.textColor,
+            borderColor: st.tooltipBorder,
             borderWidth: 1,
             callbacks: {
               label: (ctx) => ` Skor: ${ctx.raw} pts`
@@ -356,12 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         scales: {
           x: {
-            grid: { color: tc.gridColor },
-            ticks: { color: tc.textColor, font: { family: 'JetBrains Mono', size: 10 } }
+            grid: { display: true, color: st.gridColor, borderDash: [3, 3] },
+            ticks: { color: st.textColor, font: { family: 'JetBrains Mono', size: 10 } }
           },
           y: {
             grid: { display: false },
-            ticks: { color: tc.textColor, font: { family: 'Plus Jakarta Sans', size: 11 } }
+            ticks: { color: st.textColor, font: { family: 'Plus Jakarta Sans', size: 11, weight: '500' } }
           }
         }
       }
