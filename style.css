@@ -446,15 +446,7 @@ body {
   margin-top: 2px;
 }
 
-.hover-readout-pill {
-  background-color: var(--bg-page);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-pill);
-  padding: 5px 12px;
-  font-size: 11px;
-  color: var(--color-blue);
-  box-shadow: var(--shadow-subtle);
-}
+
 
 .country-buttons-grid {
   display: flex;
