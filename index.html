@@ -1,465 +1,368 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASEAN Tourism Recovery & Resilience Tracker (2019-2027)</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="style.css?v=2">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemulihan Pariwisata & Resiliensi Makroekonomi ASEAN (2019-2027)</title>
+  <meta name="description" content="Eksplorasi visual interaktif pemulihan sektor pariwisata 10 negara anggota ASEAN: analisis deret waktu, skor resiliensi krisis, dan model proyeksi ekonometrika hingga 2027.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- Header Navigation -->
-    <!-- Top Status Bar -->
-    <div class="top-status-bar">
-        <div><span class="status-dot"></span>LIVE NETWORK: ACTIVE</div>
-        <div>WORKSPACE: ASEAN_TOURISM // SP_HUB_ACTIVE</div>
-        <div id="status-date">DATE: 16-JUL-2026 // UTC+07:00</div>
-    </div>
 
-    <!-- App Wrapper (Sidebar + Main Content) -->
-    <div class="app-wrapper">
-        <!-- Sidebar -->
-        <aside class="app-sidebar">
-            <div class="sidebar-brand">
-                <h1>ASEAN</h1>
-                <p>Tourism Tracker v1.0</p>
+  <!-- Floating Navigation Bar -->
+  <header class="navbar-wrapper">
+    <nav class="navbar-pill">
+      <div class="nav-brand">
+        <span class="brand-badge">ASEAN TRACKER</span>
+        <span class="brand-title">Pemulihan Regional</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="#section-trajectory" class="nav-item">Trajektori Deret Waktu</a>
+        <a href="#section-resilience" class="nav-item">Matriks Resiliensi</a>
+        <a href="#section-simulator" class="nav-item">Simulator Kebijakan</a>
+        <a href="#section-sql" class="nav-item">Metodologi SQL</a>
+      </div>
+
+      <div class="nav-actions">
+        <a href="https://github.com/izamrosiawan/asean-economic-recovery" target="_blank" class="icon-link-btn" title="GitHub Repository">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Ganti Mode Tema">◐</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page-container">
+
+    <!-- Hero Header & Quick Stats -->
+    <section class="hero-section reveal-on-scroll">
+      <div class="hero-badge-wrap">
+        <span class="live-dot-badge">
+          <span class="pulse-dot"></span>
+          Kajian Makroekonomi 10 Negara Anggota (2019-2027)
+        </span>
+      </div>
+
+      <h1 class="hero-main-title">
+        Pemulihan Pariwisata & Resiliensi Makroekonomi ASEAN: <br>
+        <span class="text-gradient">Evaluasi Krisis & Proyeksi 2027</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Analisis komputasional empiris terhadap dinamika kunjungan wisatawan internasional, kedalaman kejatuhan pandemi, dan kurva kebangkitan ekonomi regional di Asia Tenggara.
+      </p>
+
+      <!-- Animated Key Metric Counters - Symmetrical 4 Columns -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Volume Kunjungan 2025</span>
+            <span class="metric-chip bg-emerald-light">Aktual Regional</span>
+          </div>
+          <div class="metric-number-wrap font-mono">
+            <span class="counter-number text-emerald" data-target="147.04" data-decimals="2">0.00</span>
+            <span class="unit-suffix">M</span>
+          </div>
+          <p class="metric-subtext">Mendekati baseline 2019 (147.80M)</p>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Tingkat Pemulihan Kawasan</span>
+            <span class="metric-chip bg-blue-light">vs Pra-Pandemi</span>
+          </div>
+          <div class="metric-number-wrap font-mono">
+            <span class="counter-number text-blue" data-target="99.49" data-decimals="2">0.00</span>
+            <span class="unit-suffix">%</span>
+          </div>
+          <p class="metric-subtext">Kebangkitan dari titik nadir 2021 (2.07%)</p>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Skor Resiliensi Rata-rata</span>
+            <span class="metric-chip bg-amber-light">Skor Komposit</span>
+          </div>
+          <div class="metric-number-wrap font-mono">
+            <span class="counter-number text-amber" data-target="101.56" data-decimals="2">0.00</span>
+            <span class="unit-suffix">pts</span>
+          </div>
+          <p class="metric-subtext">Dipimpin oleh Malaysia, Indonesia, & Vietnam</p>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Proyeksi Kunjungan 2027</span>
+            <span class="metric-chip">Model Ekonometrika</span>
+          </div>
+          <div class="metric-number-wrap font-mono">
+            <span class="counter-number" data-target="169.97" data-decimals="2">0.00</span>
+            <span class="unit-suffix">M</span>
+          </div>
+          <p class="metric-subtext">Pertumbuhan +15.0% di atas rekor 2019</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: Time Series Trajectory & Country Slicing -->
+    <section id="section-trajectory" class="content-section reveal-on-scroll">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-pill">01. DERET WAKTU & HISTORIS</span>
+          <h2 class="section-heading">Trajektori Kunjungan Wisatawan (2019-2027)</h2>
+        </div>
+        <p class="section-caption">
+          Pilih negara untuk menginspeksi kurva kejatuhan krisis, laju pemulihan, serta garis proyeksi ekonometrika hingga 2027.
+        </p>
+      </div>
+
+      <div class="explorer-card">
+        <div class="card-inner-top flex-between">
+          <div>
+            <h3 class="card-title">Pilih Entitas / Negara untuk Inspeksi Langsung</h3>
+            <p class="card-subtitle">Garis putus-putus pada grafik mewakili estimasi model peramalan 2026-2027</p>
+          </div>
+          <div class="hover-readout-pill font-mono" id="hover-year-readout">
+            Arahkan kursor pada kurva grafik
+          </div>
+        </div>
+
+        <!-- Country Selector Grid -->
+        <div class="country-buttons-grid" id="country-selector-bar">
+          <button type="button" class="country-btn active" data-country="ASEAN">Total ASEAN</button>
+          <button type="button" class="country-btn" data-country="Indonesia">Indonesia</button>
+          <button type="button" class="country-btn" data-country="Malaysia">Malaysia</button>
+          <button type="button" class="country-btn" data-country="Thailand">Thailand</button>
+          <button type="button" class="country-btn" data-country="Singapore">Singapura</button>
+          <button type="button" class="country-btn" data-country="Vietnam">Vietnam</button>
+          <button type="button" class="country-btn" data-country="Philippines">Filipina</button>
+          <button type="button" class="country-btn" data-country="Cambodia">Kamboja</button>
+          <button type="button" class="country-btn" data-country="Lao PDR">Laos</button>
+          <button type="button" class="country-btn" data-country="Brunei Darussalam">Brunei</button>
+          <button type="button" class="country-btn" data-country="Myanmar">Myanmar</button>
+        </div>
+
+        <!-- Live Reactive Stats Banner -->
+        <div class="reactive-banner font-mono" id="country-detail-panel">
+          <div class="banner-item">
+            <span class="b-label">Negara / Entitas:</span>
+            <strong class="b-value text-blue" id="disp-country-name">Total Kawasan ASEAN</strong>
+          </div>
+          <div class="banner-item">
+            <span class="b-label">Kunjungan 2019 (Baseline):</span>
+            <span class="b-value" id="disp-baseline">147.80M</span>
+          </div>
+          <div class="banner-item">
+            <span class="b-label">Titik Nadir Krisis (2021):</span>
+            <span class="b-value text-red" id="disp-drop">3.06M (-97.9%)</span>
+          </div>
+          <div class="banner-item">
+            <span class="b-label">Pemulihan 2025:</span>
+            <span class="b-value text-emerald" id="disp-recovery">147.04M (99.5%)</span>
+          </div>
+        </div>
+
+        <!-- Time Series Chart -->
+        <div class="chart-wrapper-tall">
+          <canvas id="timeSeriesChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Resilience Matrix & Multi-Country Comparison -->
+    <section id="section-resilience" class="content-section reveal-on-scroll">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-pill">02. MATRIKS RESILIENSI</span>
+          <h2 class="section-heading">Komparasi Ketahanan Krisis 10 Negara Anggota</h2>
+        </div>
+        <p class="section-caption">
+          Skor resiliensi dihitung dari kombinasi retensi dasar saat krisis, akselerasi pemulihan tahunan, dan pencapaian rasio terhadap 2019.
+        </p>
+      </div>
+
+      <div class="cards-grid-2">
+        <!-- Left: Resiliency Ranking Chart -->
+        <div class="visual-card">
+          <div class="card-inner-top">
+            <h3 class="card-title">Peringkat Skor Resiliensi Regional</h3>
+            <p class="card-subtitle">Nilai &gt;100 mengindikasikan ketahanan ekonomi di atas rata-rata kawasan</p>
+          </div>
+          <div class="chart-wrapper-main">
+            <canvas id="resilienceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Right: Resilience Comparison Table -->
+        <div class="visual-card">
+          <div class="card-inner-top">
+            <h3 class="card-title">Ringkasan Evaluasi Pemulihan per Negara</h3>
+            <p class="card-subtitle">Performa perbandingan pemulihan 2025 terhadap baseline 2019</p>
+          </div>
+          <div class="table-scroll-wrap font-mono">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Negara</th>
+                  <th>Pemulihan 2025</th>
+                  <th>Skor Resiliensi</th>
+                  <th>Kategori</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Malaysia</td><td class="text-emerald">106.8%</td><td class="text-emerald">108.4</td><td>Tinggi</td></tr>
+                <tr><td>Indonesia</td><td class="text-emerald">95.5%</td><td class="text-emerald">105.2</td><td>Tinggi</td></tr>
+                <tr><td>Vietnam</td><td class="text-emerald">98.2%</td><td class="text-emerald">102.7</td><td>Tinggi</td></tr>
+                <tr><td>Thailand</td><td>88.6%</td><td>91.4</td><td>Moderat</td></tr>
+                <tr><td>Singapura</td><td>84.1%</td><td>88.2</td><td>Moderat</td></tr>
+                <tr><td>Kamboja</td><td>84.3%</td><td>87.2</td><td>Moderat</td></tr>
+                <tr><td>Filipina</td><td>74.2%</td><td>78.6</td><td>Moderat</td></tr>
+                <tr><td>Laos</td><td>65.8%</td><td>69.4</td><td>Rendah</td></tr>
+                <tr><td>Myanmar</td><td class="text-red">28.4%</td><td class="text-red">31.2</td><td>Rendah</td></tr>
+                <tr><td>Brunei</td><td class="text-red">16.7%</td><td class="text-red">19.1</td><td>Rendah</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Policy & Growth Simulator -->
+    <section id="section-simulator" class="content-section reveal-on-scroll">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-pill">03. SIMULATOR KEBIJAKAN</span>
+          <h2 class="section-heading">Kalkulator Proyeksi Dampak Kebijakan Regional</h2>
+        </div>
+        <p class="section-caption">
+          Eksplorasi skenario intervensi: perluasan konektivitas penerbangan, kebijakan bebas visa regional, dan stimulasi devisa wisata.
+        </p>
+      </div>
+
+      <div class="simulator-wrapper">
+        <div class="sim-controls-card">
+          <div class="flex-between">
+            <h3 class="card-title">Tuas Parameter Kebijakan</h3>
+            <button type="button" class="reset-action-btn font-mono" id="btn-reset-sim">Reset Baseline</button>
+          </div>
+
+          <div class="sliders-stack">
+            <div class="slider-box">
+              <div class="slider-header font-mono">
+                <span class="sl-title text-emerald">Ekspansi Konektivitas Penerbangan</span>
+                <span class="sl-val" id="txt-sim-flight">+0%</span>
+              </div>
+              <input type="range" class="custom-range" id="slider-sim-flight" min="0" max="30" step="1" value="0">
+              <span class="sl-hint">Penambahan kapasitas kursi maskapai intra-ASEAN</span>
             </div>
-            
-            <nav class="sidebar-menu">
-                <button class="sidebar-btn nav-btn active" id="btn-overview" onclick="switchTab('overview')">
-                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                    Overview
-                </button>
-                <button class="sidebar-btn nav-btn" id="btn-resilience" onclick="switchTab('resilience')">
-                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    Resilience
-                </button>
-                <button class="sidebar-btn nav-btn" id="btn-forecasting" onclick="switchTab('forecasting')">
-                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                    Forecast 2027
-                </button>
-                <button class="sidebar-btn nav-btn" id="btn-explorer" onclick="switchTab('explorer')">
-                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon" style="margin-right: 2px;"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
-                    Data Explorer
-                </button>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <div class="footer-meta">
-                    <div>WORKSPACE: ASEAN_PACIFIC</div>
-                    <div>STATUS: STABLE // ONLINE</div>
-                    <div>DATA PERIOD: 2019 - 2027</div>
-                </div>
-                <div class="sidebar-actions">
-                    <a href="notebook.ipynb" class="action-link" target="_blank" download>
-                        Notebook (.IPYNB)
-                    </a>
-                    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Ubah Tema">
-                        <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                        </svg>
-                    </button>
-                </div>
+
+            <div class="slider-box">
+              <div class="slider-header font-mono">
+                <span class="sl-title text-blue">Fasilitas Bebas Visa & Paspor Terpadu</span>
+                <span class="sl-val" id="txt-sim-visa">+0%</span>
+              </div>
+              <input type="range" class="custom-range" id="slider-sim-visa" min="0" max="20" step="1" value="0">
+              <span class="sl-hint">Peningkatan kemudahan regulasi lintas batas</span>
             </div>
-        </aside>
 
-        <!-- Main Container -->
-        <div class="app-container">
-            <main class="main-content">
-                <header class="content-header">
-                    <div class="header-meta">MANIFEST ID: AS-2818-09</div>
-                    <div class="header-main">
-                        <div class="header-main-title">
-                            <h1>EXECUTIVE PERFORMANCE OVERVIEW</h1>
-                            <p>Analisis Interaktif Pemulihan Dampak Pandemi & Model Proyeksi Regional</p>
-                        </div>
-                        <div class="header-aside">
-                            <div class="refresh-time" id="refresh-time">LATEST REFRESH: 16-JUL-2026</div>
-                            
-                            <!-- Year Selector Dropdown -->
-                            <div class="selector-wrapper">
-                                <select id="year-selector" onchange="handleYearChange()">
-                                    <option value="2019">Tahun: 2019</option>
-                                    <option value="2020">Tahun: 2020</option>
-                                    <option value="2021">Tahun: 2021</option>
-                                    <option value="2022">Tahun: 2022</option>
-                                    <option value="2023">Tahun: 2023</option>
-                                    <option value="2024">Tahun: 2024</option>
-                                    <option value="2025" selected>Tahun: 2025</option>
-                                </select>
-                            </div>
+            <div class="slider-box">
+              <div class="slider-header font-mono">
+                <span class="sl-title text-amber">Pertumbuhan Devisa per Wisatawan</span>
+                <span class="sl-val" id="txt-sim-spend">+0%</span>
+              </div>
+              <input type="range" class="custom-range" id="slider-sim-spend" min="0" max="25" step="1" value="0">
+              <span class="sl-hint">Kenaikan pengeluaran rata-rata per kunjungan</span>
+            </div>
+          </div>
+        </div>
 
-                            <div class="selector-wrapper">
-                                <select id="country-selector" onchange="handleCountryChange()">
-                                    <!-- Options filled dynamically -->
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+        <div class="sim-outputs-card font-mono">
+          <h3 class="card-title">Proyeksi Nilai Makroekonomi 2027</h3>
+          
+          <div class="readout-tiles-grid">
+            <div class="tile-cell">
+              <span class="tile-lbl">Baseline Proyeksi 2027</span>
+              <span class="tile-num">169.97M</span>
+            </div>
 
-            <!-- Metrics KPI Cards -->
-            <section class="metrics-grid">
-                <!-- Card 1: Arrivals -->
-                <div class="metric-card gold">
-                    <div class="card-top">
-                        <span class="card-title" id="lbl-arrivals">Kunjungan Wisatawan (2025)</span>
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="currentColor"/></svg>
-                        </div>
-                    </div>
-                    <p class="card-value" id="kpi-arrivals">0</p>
-                    <div class="card-trend-box">
-                        <span class="trend positive" id="kpi-arrivals-change">+0% vs 2019</span>
-                        <span class="subtitle">perubahan vs pra-pandemi</span>
-                    </div>
-                    <div class="card-progress-container">
-                        <div class="card-progress-fill" id="kpi-progress-arrivals" style="width: 0%"></div>
-                    </div>
-                </div>
+            <div class="tile-cell highlight-cell">
+              <span class="tile-lbl">Proyeksi Kunjungan Wisata</span>
+              <span class="tile-num text-emerald" id="sim-projected-visitors">169.97M</span>
+            </div>
 
-                <!-- Card 2: Worst Pandemic Drop -->
-                <div class="metric-card danger">
-                    <div class="card-top">
-                        <span class="card-title">Dampak Pandemi Terparah</span>
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" fill="currentColor"/></svg>
-                        </div>
-                    </div>
-                    <p class="card-value" id="kpi-drop">0%</p>
-                    <div class="card-trend-box">
-                        <span class="trend negative" id="kpi-drop-year">Tahun 2021</span>
-                        <span class="subtitle">titik terendah pariwisata</span>
-                    </div>
-                    <div class="card-progress-container">
-                        <div class="card-progress-fill" id="kpi-progress-drop" style="width: 0%"></div>
-                    </div>
-                </div>
+            <div class="tile-cell highlight-cell">
+              <span class="tile-lbl">Pertambahan Devisa (Delta)</span>
+              <span class="tile-num text-emerald" id="sim-delta-revenue">+$0.00B</span>
+            </div>
 
-                <!-- Card 3: Recovery Rate -->
-                <div class="metric-card success">
-                    <div class="card-top">
-                        <span class="card-title" id="lbl-recovery">Tingkat Pemulihan (2025)</span>
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>
-                        </div>
-                    </div>
-                    <p class="card-value" id="kpi-recovery">0%</p>
-                    <div class="card-trend-box">
-                        <span class="trend" id="kpi-recovery-status">Memuat data...</span>
-                    </div>
-                    <div class="card-progress-container">
-                        <div class="card-progress-fill" id="kpi-progress-recovery" style="width: 0%"></div>
-                    </div>
-                </div>
+            <div class="tile-cell">
+              <span class="tile-lbl">Estimasi Skor Resiliensi</span>
+              <span class="tile-num text-blue" id="sim-projected-resilience">101.56</span>
+            </div>
+          </div>
 
-                <!-- Card 4: Resilience Score -->
-                <div class="metric-card primary">
-                    <div class="card-top">
-                        <span class="card-title">Skor Ketangguhan</span>
-                        <span class="card-badge" id="kpi-resilience-badge">MODERAT</span>
-                    </div>
-                    <p class="card-value" id="kpi-resilience">0</p>
-                    <div class="card-trend-box">
-                        <span class="subtitle">Skor Gabungan (Toleransi Drop + Pemulihan)</span>
-                    </div>
-                    <div class="card-progress-container">
-                        <div class="card-progress-fill" id="kpi-progress-resilience" style="width: 0%"></div>
-                    </div>
-                </div>
-            </section>
+          <div class="sim-footnote">
+            💡 Sinergi konektivitas penerbangan dan harmonisasi visa antar-negara anggota berpotensi menghasilkan devisa tambahan hingga belasan miliar dolar AS.
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <!-- ==========================================================================
-               TAB VIEWS
-               ========================================================================== -->
+    <!-- SECTION 4: SQL Methodology -->
+    <section id="section-sql" class="content-section reveal-on-scroll">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-pill">04. METODOLOGI SQL</span>
+          <h2 class="section-heading">Kueri Ekonometrika & Analitik Data Warehouse</h2>
+        </div>
+        <p class="section-caption">
+          Skrip SQL baku yang digunakan untuk agregasi data deret waktu, komputasi skor komposit resiliensi, dan batas ketidakpastian.
+        </p>
+      </div>
 
-            <!-- Tab 1: Overview & Timeline -->
-            <section class="tab-content active" id="tab-overview">
-                <!-- Comparison Mode Card -->
-                <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-                        <label class="toggle-wrapper" style="font-weight: 700; font-size: 15px;">
-                            <input type="checkbox" id="compare-toggle" onchange="toggleComparisonMode()" style="margin-right: 4px;">
-                            Mode Perbandingan (Multi-Negara)
-                        </label>
-                        <p class="subtitle" style="margin-bottom: 0; font-size: 12.5px;">Bandingkan tren grafik beberapa negara secara langsung dalam satu tampilan visual.</p>
-                    </div>
-                    <div class="comparison-container" id="comparison-panel">
-                        <div class="comparison-header">Pilih Negara Pembanding:</div>
-                        <div class="comparison-grid" id="comparison-checklist">
-                            <!-- Filled dynamically in app.js -->
-                        </div>
-                    </div>
-                </div>
+      <div class="sql-card">
+        <div class="sql-nav-bar">
+          <button type="button" class="sql-tab-btn active" id="btn-q-timeseries">1. Agregasi Deret Waktu (MoM/YoY)</button>
+          <button type="button" class="sql-tab-btn" id="btn-q-resilience">2. Skor Komposit Resiliensi</button>
+          <button type="button" class="sql-tab-btn" id="btn-q-forecast">3. Interval Kepercayaan Proyeksi</button>
+        </div>
 
-                <!-- Peta Interaktif ASEAN -->
-                <div class="glass-card" style="padding: 24px; margin-bottom: 20px;">
-                    <h2>Peta Interaktif Resiliensi Sektor Pariwisata ASEAN</h2>
-                    <p class="subtitle" style="margin-bottom: 16px;">Arahkan kursor untuk melihat status pemulihan pariwisata regional, dan klik untuk memilih negara tersebut.</p>
-                    
-                    <div id="map-container" class="map-card-wrapper" style="position: relative;">
-                        <!-- Custom Tooltip -->
-                        <div id="map-tooltip" class="map-tooltip">
-                            <div class="map-tooltip-title" id="map-tooltip-title">Negara</div>
-                            <div class="map-tooltip-desc" id="map-tooltip-desc">Detail data...</div>
-                        </div>
-                        <!-- Loaded dynamically via app.js -->
-                    </div>
-                </div>
+        <pre class="sql-pre font-mono" id="sql-code-display"><code>-- 1. Evaluasi Pertumbuhan Kunjungan Wisatawan per Negara (YoY)
+SELECT 
+    country_name,
+    year_period,
+    inbound_visitors,
+    LAG(inbound_visitors, 1) OVER (PARTITION BY country_name ORDER BY year_period) AS prev_year_visitors,
+    ROUND(((inbound_visitors - LAG(inbound_visitors, 1) OVER (PARTITION BY country_name ORDER BY year_period)) * 100.0) / 
+          LAG(inbound_visitors, 1) OVER (PARTITION BY country_name ORDER BY year_period), 2) AS yoy_growth_pct
+FROM asean_tourism_timeseries
+WHERE year_period BETWEEN 2019 AND 2025
+ORDER BY country_name, year_period;</code></pre>
+      </div>
+    </section>
 
-                <div class="chart-container-large glass-card">
-                    <div class="chart-header">
-                        <div>
-                            <h2>Tren Pemulihan Pariwisata ASEAN (2019-2025)</h2>
-                            <p class="subtitle">Klik pada nama negara untuk menganalisis tren spesifik negara tersebut dibandingkan dengan tren regional.</p>
-                        </div>
-                        <div class="chart-legend-custom" id="overview-legend"></div>
-                    </div>
-                    <div class="canvas-wrapper">
-                        <canvas id="overviewChart"></canvas>
-                    </div>
-                </div>
+  </main>
 
-                <!-- Simulation & Insights Row (Grid-Two-Columns) -->
-                <div class="grid-two-columns" style="margin-bottom: var(--space-margin);">
-                    <!-- Economic Impact Simulator Card -->
-                    <div class="glass-card" style="margin-bottom: 0;">
-                        <h2>Simulasi Dampak & Kerugian Ekonomi</h2>
-                        <p class="subtitle">Sesuaikan pengeluaran rata-rata per turis untuk melihat estimasi total pendapatan pariwisata regional serta kerugian akibat pandemi.</p>
-                        
-                        <div style="margin-top: 0; background: transparent; border: none; padding: 0;">
-                            <div class="slider-group">
-                                <div class="slider-label-wrapper">
-                                    <span>Rata-Rata Belanja Per Wisatawan (USD)</span>
-                                    <span class="slider-value" id="spending-value">$1,000</span>
-                                </div>
-                                <input type="range" id="spending-slider" class="premium-range" min="100" max="5000" step="50" value="1000" oninput="handleSpendingChange(this.value)">
-                            </div>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
-                            <div style="background: var(--color-secondary); padding: 16px; border-radius: var(--rounded-md); border: 1px solid var(--color-border-glass);">
-                                <div class="card-title" style="font-size: 11px; margin-bottom: 4px; text-transform: uppercase;">Pendapatan Estimasi (<span class="spending-year-lbl">2025</span>)</div>
-                                <div class="card-value" id="sim-revenue" style="font-size: 20px; color: var(--color-accent); font-weight: 700;">$0</div>
-                            </div>
-                            <div style="background: var(--color-error-bg); padding: 16px; border-radius: var(--rounded-md); border: 1px solid var(--color-border-glass);">
-                                <div class="card-title" style="font-size: 11px; margin-bottom: 4px; text-transform: uppercase; color: var(--color-error);">Kerugian Akumulatif (2020-2022)</div>
-                                <div class="card-value" id="sim-loss" style="font-size: 20px; color: var(--color-error); font-weight: 700;">$0</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Smart Insights Card -->
-                    <div class="glass-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
-                        <div>
-                            <h2>Analisis & Wawasan Resiliensi Sektoral</h2>
-                            <p class="subtitle">Wawasan otomatis yang mendeteksi pola ketahanan destinasi pariwisata secara real-time.</p>
-                            <div class="insight-card" id="insight-container" style="margin-top: 0;">
-                                <!-- Dynamically loaded from JS -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <h2>Garis Waktu Pandemi & Respon Pemulihan Sektor</h2>
-                    <p class="subtitle">Fase peristiwa global utama yang membentuk dinamika naik-turunnya grafik pariwisata ASEAN.</p>
-                    <div class="timeline-items">
-                        <div class="timeline-item info">
-                            <span class="timeline-year">2019</span>
-                            <div class="timeline-desc">
-                                <strong>Pra-Pandemi (Puncak Historis)</strong>
-                                Aktivitas pariwisata berjalan di kapasitas maksimum. Total wisatawan asing ke wilayah ASEAN melampaui 147 juta pengunjung.
-                            </div>
-                        </div>
-                        <div class="timeline-item warning">
-                            <span class="timeline-year">2020</span>
-                            <div class="timeline-desc">
-                                <strong>Penyebaran Global & Lockdown</strong>
-                                Pembatasan perjalanan internasional ketat dan lockdown darurat dimulai di awal Q2 2020. Penurunan kunjungan langsung anjlok hingga ~80%.
-                            </div>
-                        </div>
-                        <div class="timeline-item danger">
-                            <span class="timeline-year">2021</span>
-                            <div class="timeline-desc">
-                                <strong>Gelombang Varian Delta (Krisis Puncak)</strong>
-                                Krisis pariwisata mencapai titik terdalam dengan penutupan perbatasan total yang lama. Kunjungan global menyusut hanya tersisa 2% dibanding 2019.
-                            </div>
-                        </div>
-                        <div class="timeline-item success">
-                            <span class="timeline-year">2022</span>
-                            <div class="timeline-desc">
-                                <strong>Vaksinasi Massal & Jalur Bebas Karantina</strong>
-                                Pengenalan koridor perjalanan aman (Vaccinated Travel Lanes) secara bertahap memicu pertumbuhan pariwisata kembali.
-                            </div>
-                        </div>
-                        <div class="timeline-item info">
-                            <span class="timeline-year">2023-2025</span>
-                            <div class="timeline-desc">
-                                <strong>Fase Normal Baru & Kompetisi Bebas Visa</strong>
-                                Normalisasi penerbangan penuh dan strategi pembebasan visa timbal balik antar negara ASEAN memulihkan industri hingga menyentuh angka 99% dari level pra-pandemi.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Tab 2: Resilience Index -->
-            <section class="tab-content" id="tab-resilience">
-                <div class="grid-two-columns">
-                    <div class="glass-card">
-                        <h2>Distribusi Skor Ketangguhan Sektor Pariwisata</h2>
-                        <p class="subtitle">Perbandingan skor komposit yang dihitung berdasarkan kemampuan menahan penurunan krisis dan kecepatan memulihkan pasar wisata di 2025.</p>
-                        <div class="canvas-wrapper">
-                            <canvas id="resilienceScoreChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="glass-card">
-                        <h2>Analisis Kuadran: Keparahan Drop vs Kecepatan Pulih</h2>
-                        <p class="subtitle">Peta sebaran negara. Negara di kuadran kanan atas menunjukkan resiliensi tertinggi (drop tidak terlalu dalam dan pulih melampaui level awal).</p>
-                        <div class="canvas-wrapper">
-                            <canvas id="resilienceScatterChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card margin-top">
-                    <h2>Tabel Peringkat Ketangguhan Sektoral (Resilience Ranking)</h2>
-                    <p class="subtitle">Peringkat resmi ketahanan industri pariwisata antar negara anggota ASEAN.</p>
-                    <div class="table-wrapper">
-                        <table class="custom-table" id="resilience-table">
-                            <thead>
-                                <tr>
-                                    <th>Peringkat</th>
-                                    <th>Negara</th>
-                                    <th>Kunjungan Terendah (Krisis)</th>
-                                    <th>Tingkat Penurunan (Drop)</th>
-                                    <th>Recovery Rate (2025 vs 2019)</th>
-                                    <th>Tahun Pulih Penuh</th>
-                                    <th>Skor Ketangguhan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Generated Dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Tab 3: Forecasting -->
-            <section class="tab-content" id="tab-forecasting">
-                <div class="chart-container-large glass-card">
-                    <div class="chart-header">
-                        <div>
-                            <h2>Peramalan Tren Pemulihan Pariwisata (2026-2027)</h2>
-                            <p class="subtitle">Proyeksi pertumbuhan menggunakan model regresi linier trend-line berbasis performa riil fase pemulihan pasca-pandemi (2021-2025).</p>
-                        </div>
-                    </div>
-                    <div class="canvas-wrapper">
-                        <canvas id="forecastChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Proyeksi What-If Simulator Panel -->
-                <div class="glass-card" style="margin-bottom: 24px;">
-                    <h2>Simulator Pertumbuhan Pariwisata "What-If" (2026-2027)</h2>
-                    <p class="subtitle">Geser slider untuk menyesuaikan laju proyeksi pertumbuhan model regresi linier untuk menyimulasikan skenario optimis (+%), moderat (0%), atau pesimis (-%).</p>
-                    
-                    <div style="margin-top: 0; background: transparent; border: none; padding: 0;">
-                        <div class="slider-group">
-                            <div class="slider-label-wrapper">
-                                <span>Faktor Penyesuaian Pertumbuhan Proyeksi</span>
-                                <span class="slider-value" id="whatif-value">Moderat (0%)</span>
-                            </div>
-                            <input type="range" id="whatif-slider" class="premium-range" min="-30" max="30" step="1" value="0" oninput="handleWhatIfChange(this.value)">
-                            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--color-muted); margin-top: 4px;">
-                                <span>Sangat Pesimis (-30%)</span>
-                                <span>Moderat (Baseline OLS)</span>
-                                <span>Sangat Optimis (+30%)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid-two-columns margin-top">
-                    <div class="glass-card info-card">
-                        <h2>Metodologi Pemodelan Proyeksi</h2>
-                        <ul>
-                            <li><strong>Pendekatan Model:</strong> Regresi Tren Linier Metode Kuadrat Terkecil (Ordinary Least Squares).</li>
-                            <li><strong>Alasan Pembatasan Data Latihan:</strong> Model dilatih khusus menggunakan data tahun 2021 hingga 2025 (fase pemulihan). Menyertakan data tahun 2020 akan membiaskan tren karena anomali karantina wilayah yang ekstrem.</li>
-                            <li><strong>Parameter Keberhasilan:</strong> Kecepatan pemulihan (kemiringan kurva) dipengaruhi oleh adaptasi kebijakan pembebasan visa kunjungan dan pemulihan rute penerbangan langsung internasional di masing-masing negara.</li>
-                        </ul>
-                    </div>
-                    <div class="glass-card">
-                        <h2>Estimasi Kunjungan Wisatawan (2026-2027)</h2>
-                        <p class="subtitle">Tabel proyeksi volume kunjungan wisatawan mancanegara ke depan.</p>
-                        <div class="table-wrapper">
-                            <table class="custom-table" id="forecast-table">
-                                <thead>
-                                    <tr>
-                                        <th>Negara</th>
-                                        <th>2025 (Aktual)</th>
-                                        <th>2026 (Proyeksi)</th>
-                                        <th>2027 (Proyeksi)</th>
-                                        <th>CAGR (2025-2027)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Generated Dynamically -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Tab 4: Data Explorer -->
-            <section class="tab-content" id="tab-explorer">
-                <div class="glass-card">
-                    <div class="explorer-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
-                        <div>
-                            <h2>Eksplorasi Dataset Konsolidasi</h2>
-                            <p class="subtitle" style="margin-bottom: 0;">Daftar lengkap data historis pariwisata regional, metrik perhitungan, dan proyeksi model dalam satu antarmuka terintegrasi.</p>
-                        </div>
-                        
-                        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-                            <!-- Search Input Box -->
-                            <div class="search-wrapper">
-                                <svg class="search-icon-svg" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                                <input type="text" id="table-search" class="search-input" placeholder="Cari negara..." oninput="handleTableSearch(this.value)">
-                            </div>
-                            
-                            <button class="action-btn" onclick="exportCSV()">
-                                <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px; vertical-align: middle;"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z" fill="currentColor"/>
-                                </svg>
-                                Ekspor (.CSV)
-                            </button>
-                        </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="custom-table" id="explorer-table">
-                            <thead>
-                                <!-- Generated Dynamically -->
-                            </thead>
-                            <tbody>
-                                <!-- Generated Dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </main>
+  <!-- Clean Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-meta">
+        <strong>ASEAN Tourism Recovery & Resilience Tracker</strong>
+        <p>Kajian Makroekonomi & Model Deret Waktu 10 Negara Anggota ASEAN (2019-2027)</p>
+      </div>
+      <div class="footer-credits font-mono">
+        <span>IZAM ROSIAWAN</span>
+        <span>•</span>
+        <span>TELKOM UNIVERSITY</span>
+      </div>
     </div>
-    </div> <!-- Close app-wrapper -->
+  </footer>
 
-    <!-- Script Application -->
-    <script src="app.js?v=2"></script>
+  <script src="app.js"></script>
 </body>
 </html>

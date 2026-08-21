@@ -1,9 +1,12 @@
 # ASEAN Post-Pandemic Economic Recovery Analytics & Tourism Forecasting
 
+[![Live Dashboard](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen.svg)](https://izamrosiawan.github.io/asean-economic-recovery/)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Pandas](https://img.shields.io/badge/Pandas-Analytics-orange.svg)](https://pandas.pydata.org/)
 [![Domain](https://img.shields.io/badge/Domain-Macroeconomic%20Analytics-blue.svg)](#)
-[![Tests](https://img.shields.io/badge/Tests-Pytest%20Passing-brightgreen.svg)](#)
+[![CI Pipeline](https://img.shields.io/badge/CI-GitHub%20Actions%20Passing-brightgreen.svg)](#)
+
+> 🚀 **Live Interactive Dashboard**: Akses visualisasi peta geospatial dan pemulihan makroekonomi interaktif di [https://izamrosiawan.github.io/asean-economic-recovery/](https://izamrosiawan.github.io/asean-economic-recovery/)
 
 Repositori ini menyajikan studi analitik komparatif mengenai dinamika pemulihan ekonomi makro (*Macroeconomic Recovery*) dan lintasan pemulihan sektor pariwisata internasional (*International Tourist Arrivals*) di 10 negara anggota ASEAN (*Association of Southeast Asian Nations*) pasca-guncangan pandemi COVID-19 (2019 - 2027F).
 

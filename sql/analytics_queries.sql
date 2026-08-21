@@ -27,7 +27,6 @@ JOIN Arrivals2019 a19 ON c.country_id = a19.country_id
 JOIN WorstPandemic wp ON c.country_id = wp.country_id
 ORDER BY drop_severity_pct ASC;
 
-
 -- ==============================================================================
 -- QUERY 2: RECOVERY RATE % BY 2025 (2025 Actual vs 2019 Base)
 -- Purpose: Evaluates the recovery status of each nation by 2025.
@@ -52,7 +51,6 @@ JOIN Arrivals2019 a19 ON c.country_id = a19.country_id
 JOIN Arrivals2025 a25 ON c.country_id = a25.country_id
 ORDER BY recovery_rate_2025_pct DESC;
 
-
 -- ==============================================================================
 -- QUERY 3: 2-YEAR CAGR (Compound Annual Growth Rate) FOR 2025-2027 PROJECTIONS
 -- Purpose: Evaluates forecasted growth trajectories using exponentiation.
@@ -76,7 +74,6 @@ FROM countries c
 JOIN Actual2025 a25 ON c.country_id = a25.country_id
 JOIN Forecast2027 f27 ON c.country_id = f27.country_id
 ORDER BY cagr_2025_2027_pct DESC;
-
 
 -- ==============================================================================
 -- QUERY 4: YEAR-OVER-YEAR (YoY) ARRIVAL GROWTH RATES (2019-2025)
@@ -105,7 +102,6 @@ SELECT
 FROM YearlyArrivals
 ORDER BY country_name, year;
 
-
 -- ==============================================================================
 -- QUERY 5: REGIONAL RESILIENCE CLASSIFICATION & RANKINGS
 -- Purpose: Ranks and categorizes countries based on recovery performance.
@@ -125,7 +121,6 @@ SELECT
 FROM countries c
 JOIN country_metrics cm ON c.country_id = cm.country_id
 ORDER BY resilience_score DESC;
-
 
 -- ==============================================================================
 -- QUERY 6: CUMULATIVE REVENUE LOSS ANALYSIS (2020-2022 Pandemic Period)
